@@ -1,0 +1,268 @@
+aid: lloyds-of-london
+name: Lloyd's of London
+review:
+  question: Does Lloyd's of London expose a real, self-serve public API surface, or is its
+    integration surface partner-gated?
+  answer: partner-gated
+  date: '2026-07-25'
+  reviewer: API Evangelist
+  homeMarket: United Kingdom
+  tier: market-infrastructure
+  gated: true
+findings:
+  summary: |
+    Lloyd's of London is a market body, not a carrier, and its public technical surface is
+    standards-and-documentation-first. Lloyd's did run a genuine developer portal — the Lloyd's
+    API Development Portal at developer.lloyds.com, launched in BETA on 8 June 2020 under the
+    "API Factory" programme — which published a Base API Standard, authentication guidance, a
+    registration and onboarding path, and a catalogue of three market APIs (Placing - Submission
+    and Quote, Placing - Firm Order, and RPAC for delegated authority risk/premium/claims). That
+    portal is no longer serving content: on 2026-07-25 https://developer.lloyds.com/ over HTTPS
+    did not complete a TLS connection from two IPs (curl exit 28, connection timed out), and over
+    HTTP port 80 it returned 301 Moved Permanently to https://www.lloyds.com/. Internet Archive
+    captures corroborate the retirement — snapshots return 200 through 2022-01-25 and 301 to
+    https://www.lloyds.com/ from 2024-04-06 onward. No replacement developer portal is published:
+    developers.lloyds.com and docs.lloyds.com do not resolve in DNS, and /developers, /developer,
+    /api, /partners and /integrations on www.lloyds.com all return 404.
+    api.lloyds.com resolves and is a live Azure API Management gateway, but every anonymous path
+    tried returns the APIM JSON body {"statusCode": 404, "message": "Resource not found"} — it is
+    a backing gateway, not a documented public API.
+    The Placing API base URL documented on the portal,
+    https://api.londonmarketgroup.co.uk/PPL/Lloyds/Placing/V1, is a live London Market Azure API
+    Management gateway (DNS resolves to api-londonmarketgroup.azure-api.net) but returns the same
+    APIM 404 anonymously.
+    Onboarding was never self-serve for production: per the portal's Registration and Onboarding
+    page, an API consumer (broker, carrier or market vendor) must be onboarded to the LIMOSS API
+    Gateway / LIMOSS Common Services, be guested into each of the three Common Services
+    environments (Sandbox, PreProd, Prod) separately, register its application in the Common
+    Services Azure Active Directory, and register an X.509 certificate per environment.
+    Sample source code lived in a private GitHub repository (lloydsdigital/placing-api) reachable
+    only through a portal GitHub challenge; the lloydsdigital organisation exists with 0 public
+    repositories, as does the LloydsOfLondon "Lloyd's Market Community" organisation.
+    Verdict: no public self-serve API; a real but retired developer portal; genuine market APIs
+    that are and always were partner-gated. Recording this accurately is the finding.
+  developerPortal:
+    url: https://developer.lloyds.com/
+    classification: retired real developer portal (was a genuine self-serve documentation site in
+      BETA; production API access was always partner-gated)
+    liveStatusHttps: '000 — TLS connection timed out (curl exit 28) against 165.160.13.20 and
+      165.160.15.20 on 2026-07-25'
+    liveStatusHttp: '301 Moved Permanently -> https://www.lloyds.com/ (2026-07-25)'
+    archivedStatus: '200 through 2022-01-25; 301 to https://www.lloyds.com/ from 2024-04-06
+      (Internet Archive CDX)'
+    selfServe: false
+    loginWall: false
+    marketingOnly: false
+  probes:
+  - url: https://www.lloyds.com/
+    status: 200
+  - url: https://developer.lloyds.com/
+    status: '000 (https, connection timeout) / 301 (http -> https://www.lloyds.com/)'
+  - url: https://developers.lloyds.com/
+    status: 000 — no DNS record
+  - url: https://docs.lloyds.com/
+    status: 000 — no DNS record
+  - url: https://api.lloyds.com/
+    status: '404 — live Azure API Management gateway, JSON body {"statusCode": 404, "message":
+      "Resource not found"}'
+  - url: https://www.lloyds.com/developers
+    status: 404
+  - url: https://www.lloyds.com/developer
+    status: 404
+  - url: https://www.lloyds.com/api
+    status: 404
+  - url: https://www.lloyds.com/partners
+    status: 404
+  - url: https://www.lloyds.com/integrations
+    status: 404
+  - url: https://api.lloyds.com/openapi.json
+    status: 404
+  - url: https://api.lloyds.com/swagger.json
+    status: 404
+  - url: https://www.lloyds.com/.well-known/openid-configuration
+    status: 404 (HTML error page, not a discovery document)
+  - url: https://api.lloyds.com/.well-known/openid-configuration
+    status: 404
+  - url: https://api.lloyds.com/.well-known/oauth-authorization-server
+    status: 404
+  - url: https://api.londonmarketgroup.co.uk/
+    status: 404 — live Azure API Management gateway (api-londonmarketgroup.azure-api.net)
+  - url: https://api.londonmarketgroup.co.uk/PPL/Lloyds/Placing/V1
+    status: 404 anonymous
+  - url: https://insights.lloyds.com/
+    status: 200 — Lloyd's Insights Hub; company registration required for access
+  - url: https://crystal.lloyds.com/
+    status: 200 -> redirects to https://crystalplus.lloyds.com/home (Crystal+ regulatory
+      database, login)
+  - url: https://www.lloyds.com/market-resources/requirements-and-standards
+    status: 200
+  - url: https://www.lloyds.com/market-resources/requirements-and-standards/core-data-record
+    status: 200
+  - url: https://www.lloyds.com/market-resources/delegated-authorities/market-knowledge/reporting-standards
+    status: 200
+  openAPI:
+    harvested: false
+    specsSaved: 0
+    documentedSpec:
+      url: https://developer.lloyds.com/placingsubmissionandquote-v1/static/resources/Swagger_PlacingSubmissionAndQuote_v1.10.202004160916.json
+      note: |
+        The Lloyd's Placing API Technical Model page states: "The swagger or OpenAPI 3.0 file for
+        this version of the API (v1.10) can be downloaded via this link." The link above is the
+        exact href published on that page. It could NOT be harvested: the live host does not
+        complete a TLS connection (000 on 2026-07-25) and the file was never captured by the
+        Internet Archive (Wayback returns 404 for it; a CDX query for
+        developer.lloyds.com/placingsubmissionandquote-v1/static/* returns no rows). Nothing was
+        saved rather than reconstruct a spec — no openapi/ directory exists in this repo.
+    provenanceOfDocumentation:
+    - url: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+      fetched: '2026-07-25'
+      status: 200
+      note: Archived Technical Model page — carries the Swagger download link, request/response
+        examples and the api.londonmarketgroup.co.uk base URL.
+    - url: https://web.archive.org/web/20210128061829/https://developer.lloyds.com/placingsubmissionandquote-v1/Key-Details-On-API
+      fetched: '2026-07-25'
+      status: 200
+      note: Archived Key Details page — resource list (BrokerDepartment, Submission,
+        SubmissionDocument, SubmissionUnderwriter, SubmissionDialogue,
+        UnderwriterOrganisation), endpoint version 1.10, endpoint URL
+        https://api.londonmarketgroup.co.uk/PPL/Lloyds/Placing/V1.
+    - url: https://web.archive.org/web/20200930085423/https://developer.lloyds.com/Get-Started/Authentication-Information
+      fetched: '2026-07-25'
+      status: 200
+      note: Archived authentication guidance — Azure AD, OpenID Connect, JWT, on-behalf-of flow,
+        service accounts, user_impersonation scope, X.509 certificates.
+    - url: https://web.archive.org/web/20200930075931/https://developer.lloyds.com/Get-Started/Registration-Onboarding
+      fetched: '2026-07-25'
+      status: 200
+      note: Archived onboarding page — LIMOSS Common Services onboarding, per-environment
+        guesting, Azure AD app registration, X.509 registration.
+    - url: https://web.archive.org/web/20200610082013/https://developer.lloyds.com/Explore-Innovate
+      fetched: '2026-07-25'
+      status: 200
+      note: Archived API catalogue — the three published APIs.
+    - url: https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+      fetched: '2026-07-25'
+      status: 200
+      note: Archived Base API Standard — REST/JSON, synchronous request-response only; SOAP,
+        message-oriented and publish-subscribe interfaces explicitly out of scope.
+  acordPosture: ACORD-aligned market standards body — Core Data Record and Coverholder Reporting
+    Standards align to ACORD technical standards, Lloyd's funds free ACORD membership for all
+    coverholders (ACORD Delegated Authority Data Standards), and ACORD publicly mapped its data
+    messaging standards and digital solutions to the Lloyd's API Factory placement specifications
+    (June 2020); no ACORD certification of a Lloyd's-run API is claimed
+  acordEvidence:
+  - url: https://www.lloyds.com/market-resources/requirements-and-standards/core-data-record
+    quote: The CDR aligns with ACORD technical standards, which are the agreed method for
+      submitting and exchanging data within the London market, and will be used to drive digital
+      processing, consistent with the MRC v3.
+  - url: https://www.lloyds.com/insights/news/lloyds-provides-acord-membership-for-all-coverholders
+    quote: Lloyd's coverholders will have access to ACORD Delegated Authority Data Standards,
+      information, training, and other valuable resources.
+  - url: https://www.acord.org/ACORD-about/acord-news/2020/06/11/acord-announces-mapping-of-lloyd-s-api-factory-standards-to-existing-data-standards-solutions
+    note: ACORD announcement mapping ACORD Data Messaging Standards and Digital Solutions to the
+      Lloyd's API Factory placement specifications.
+  insuranceVerbs:
+    quote: 'yes — Placing API Submission and Quote v1 (request for quote, underwriter quote
+      response); partner-only (brokers and carriers onboarded to LIMOSS)'
+    bind: 'yes — Placing API Firm Order ("Finalise Placings, Bind Risks, Sign Transactions");
+      catalogue entry only, no public reference; partner-only'
+    issue: not exposed as a Lloyd's API — policy issuance sits with managing agents and syndicates
+    fnol: 'partial — RPAC submits risk, premium and claims details for delegated authority
+      placements (reporting rather than a live FNOL API); partner-only. The Core Data Record
+      explicitly covers "claims matching at first notification of loss".'
+    audience: partner-only (brokers, carriers/managing agents, coverholders, market vendors). No
+      consumer-facing and no agent self-serve surface.
+  authModel:
+    scheme: OAuth 2.0 / OpenID Connect via Azure Active Directory (Common Services tenant), JWT
+      bearer tokens
+    flows:
+    - authorization-code with on-behalf-of token exchange for application user tokens
+    - service account (headless server-to-server) tokens
+    scopes:
+    - user_impersonation
+    additional: X.509 client certificate must be registered per LIMOSS environment; all calls pass
+      through the LIMOSS API Gateway
+    environments:
+    - Sandbox
+    - PreProd
+    - Production
+    selfServeKeys: false
+  webhooks:
+    present: false
+    asyncapi: false
+    note: No event catalog, webhook documentation or AsyncAPI definition was found. The Base API
+      Standard explicitly places message-originated and publish-subscribe interfaces OUT of
+      scope, so the absence is by design.
+  postman:
+    publicCollection: false
+    note: The portal's roadmap mentioned running testing tools such as Postman against a sandbox
+      test harness for registered users; no public Postman collection or workspace was found.
+  graphql:
+    present: false
+  grpc:
+    present: false
+  transports:
+  - protocol: REST
+    scheme: https
+    baseURL: https://api.londonmarketgroup.co.uk/PPL/Lloyds/Placing/V1
+    documented: true
+    publiclyAccessible: false
+    note: Live Azure API Management gateway; returns APIM 404 anonymously. Access requires LIMOSS
+      onboarding, Azure AD token and registered X.509 certificate.
+  - protocol: SOAP
+    documented: false
+    note: Explicitly out of scope of the Lloyd's Base API Standard.
+  - protocol: WebSocket
+    documented: false
+  - protocol: GraphQL
+    documented: false
+  otherPublishedSurfaces:
+  - name: Lloyd's Insights Hub
+    url: https://insights.lloyds.com/
+    status: 200
+    note: 'The Core Data Record page states the interactive CDR Glossary dashboard "and
+      accompanying data feed (available via an API)" is delivered through the Insights Hub, and
+      that "your company will need to be registered for you to have access". Registration-gated;
+      no public documentation, no base URL and no specification published. Contact:
+      insightshub@lloyds.com.'
+  - name: Crystal+
+    url: https://crystalplus.lloyds.com/home
+    status: 200
+    note: Lloyd's international regulatory and tax requirements database for the market;
+      web application behind login, no documented API.
+  - name: Delegated Data Manager (DDM)
+    url: https://www.lloyds.com/market-resources/tools/delegated-data-manager/faqs
+    status: 200
+    note: Market bordereaux service run through LIMOSS, powered by the Tide platform from Charles
+      Taylor InsurTech; a SaaS application for managing agents, not a published API.
+  - name: LIMOSS Market Business Glossary
+    note: Referenced by Lloyd's as the centralised source of business definitions, standards and
+      reference data for the London Market (hosts interactive CDR v3.2 and MRC v3). Operated by
+      LIMOSS, not by Lloyd's directly.
+sources:
+- url: https://www.lloyds.com/
+  type: Website
+  note: Corporation of Lloyd's home; no developer or API navigation.
+- url: https://www.lloyds.com/market-resources/requirements-and-standards/core-data-record
+  type: Documentation
+  note: Core Data Record v3.2, ACORD alignment, Insights Hub data feed reference.
+- url: https://www.lloyds.com/market-resources/delegated-authorities/market-knowledge/reporting-standards
+  type: Documentation
+  note: Mandated coverholder/DCA reporting standards with premium, claims and ELTO templates.
+- url: https://www.lloyds.com/insights/news/lloyds-provides-acord-membership-for-all-coverholders
+  type: Documentation
+  note: Free ACORD membership for all Lloyd's coverholders.
+- url: https://web.archive.org/web/20220125090210/https://developer.lloyds.com/
+  type: Documentation
+  note: Last 200-status capture of the Lloyd's API Development Portal home page (BETA).
+- url: https://developer.lloyds.com/
+  type: DeveloperPortal
+  note: Retired — HTTPS times out, HTTP 301s to https://www.lloyds.com/ as of 2026-07-25.
+actions:
+  apisYmlCreated: true
+  openapiDirectoryCreated: false
+  reason: |
+    Three real Lloyd's market APIs are recorded from Lloyd's own published catalogue and
+    documentation, with archived documentation URLs as provenance. No OpenAPI/Swagger file was
+    saved because none could be retrieved: the one documented specification URL is unreachable
+    (portal retired) and unarchived. Nothing was reconstructed or inferred.

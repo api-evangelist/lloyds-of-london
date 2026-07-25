@@ -1,0 +1,148 @@
+aid: lloyds-of-london
+url: https://raw.githubusercontent.com/api-evangelist/lloyds-of-london/refs/heads/main/apis.yml
+name: Lloyd's of London
+kind: company
+description: >-
+  Lloyd's of London is the world's specialist insurance and reinsurance market, operating as a
+  regulated marketplace rather than as a carrier: the Corporation of Lloyd's oversees syndicates,
+  managing agents, brokers and coverholders who underwrite property, casualty, marine, aviation,
+  energy, cyber, political risk and reinsurance business on a subscription basis from its home
+  market in the United Kingdom. Its API posture reflects that role. Lloyd's is a standards and
+  market-infrastructure publisher first — the Core Data Record (CDR), the Market Reform Contract
+  (MRC), coverholder and delegated claims reporting standards, and Blueprint Two digital
+  processing requirements — and its technical surface is aimed at brokers, syndicates and market
+  vendors, not at outside developers. Lloyd's ran a public API Development Portal at
+  developer.lloyds.com (the "API Factory", BETA from June 2020) that published a Base API
+  Standard and a catalogue of three market APIs: Placing — Submission and Quote, Placing — Firm
+  Order, and RPAC for delegated authority risk, premium and claims. That portal now redirects to
+  www.lloyds.com and no replacement self-serve developer portal is published. Production access
+  to the underlying London Market API gateway
+  (https://api.londonmarketgroup.co.uk) has always been partner-gated: an organisation must be
+  onboarded to LIMOSS Common Services, registered in the Common Services Azure Active Directory
+  tenant, and register an X.509 certificate before it can call anything. There is no public,
+  self-serve Lloyd's API, no public sandbox and no public downloadable specification reachable
+  today — the honest record for this market body is documentation-and-standards-first.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Insurance
+- United Kingdom
+- Reinsurance
+- Specialty Insurance
+- London Market
+- Underwriting
+- Claims
+- Delegated Authority
+- Broker
+- Market Infrastructure
+- Standards
+- ACORD
+created: '2026-07-25'
+modified: '2026-07-25'
+specificationVersion: '0.19'
+apis:
+- aid: lloyds-of-london:lloyds-placing-api-submission-and-quote
+  name: Lloyd's Placing API - Submission and Quote v1
+  description: >-
+    Market API for electronic placement in the London subscription market — create submissions and
+    submission versions, upload Market Reform Contract and quote documents, add carriers and
+    underwriters to a submission, send requests for quote, and receive underwriter responses
+    (reject, express interest, request for information, or quote). Published by Lloyd's under the
+    API Factory programme with a Swagger/OpenAPI 3.0 document
+    (Swagger_PlacingSubmissionAndQuote_v1.10.202004160916.json) offered for download from the
+    developer portal. Access is partner-gated to onboarded London Market organisations via LIMOSS
+    Common Services, Azure AD tokens and a registered X.509 certificate; the developer portal that
+    hosted the reference and the specification now redirects to www.lloyds.com, so the spec could
+    not be harvested. Covers the QUOTE verb of the insurance lifecycle, broker-to-carrier only.
+  humanURL: https://developer.lloyds.com/placingsubmissionandquote-v1/Developer-Overview
+  baseURL: https://api.londonmarketgroup.co.uk/PPL/Lloyds/Placing/V1
+  tags:
+  - Placement
+  - Submission
+  - Quote
+  - London Market
+  properties:
+  - type: Documentation
+    url: https://web.archive.org/web/20210128061829/https://developer.lloyds.com/placingsubmissionandquote-v1/Key-Details-On-API
+  - type: APIReference
+    url: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  - type: Documentation
+    url: https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+  - type: Authentication
+    url: https://web.archive.org/web/20200930085423/https://developer.lloyds.com/Get-Started/Authentication-Information
+- aid: lloyds-of-london:lloyds-placing-api-firm-order
+  name: Lloyd's Placing API - Firm Order
+  description: >-
+    Second Placing API listed in the Lloyd's API catalogue, described by Lloyd's as "Finalise
+    Placings, Bind Risks, Sign Transactions" — the BIND verb of the insurance lifecycle for the
+    London subscription market. Only a catalogue-level description was ever published publicly; no
+    reference documentation, base URL or downloadable specification is reachable, and the
+    developer portal that carried the catalogue now redirects to www.lloyds.com. Partner-gated to
+    onboarded market participants.
+  humanURL: https://web.archive.org/web/20200610082013/https://developer.lloyds.com/Explore-Innovate
+  tags:
+  - Placement
+  - Firm Order
+  - Bind
+  - London Market
+  properties:
+  - type: Documentation
+    url: https://web.archive.org/web/20200610082013/https://developer.lloyds.com/Explore-Innovate
+- aid: lloyds-of-london:lloyds-rpac-api
+  name: Lloyd's RPAC API (Risk, Premium and Claims)
+  description: >-
+    Third API listed in the Lloyd's API catalogue, described by Lloyd's as "Submit Risk, Premium
+    and Claims details for Delegated Authority Placements" — the delegated authority reporting
+    path that carries risk, premium and claims (FNOL-adjacent) data from coverholders and
+    delegated claims administrators into the market, aligned to Lloyd's Coverholder Reporting
+    Standards and ACORD technical standards. Only a catalogue-level description was ever published
+    publicly; no reference documentation, base URL or downloadable specification is reachable.
+    Partner-gated to onboarded market participants.
+  humanURL: https://web.archive.org/web/20200610082013/https://developer.lloyds.com/Explore-Innovate
+  tags:
+  - Delegated Authority
+  - Risk
+  - Premium
+  - Claims
+  properties:
+  - type: Documentation
+    url: https://web.archive.org/web/20200610082013/https://developer.lloyds.com/Explore-Innovate
+  - type: Documentation
+    url: https://www.lloyds.com/market-resources/delegated-authorities/market-knowledge/reporting-standards
+common:
+- type: Website
+  url: https://www.lloyds.com/
+- type: Documentation
+  url: https://www.lloyds.com/market-resources/requirements-and-standards
+  name: Requirements and Standards
+  description: Lloyd's market requirements and standards corpus — the primary technical surface
+    Lloyd's publishes to its market.
+- type: Documentation
+  url: https://www.lloyds.com/market-resources/requirements-and-standards/core-data-record
+  name: Core Data Record
+  description: The Core Data Record (CDR v3.2), the market's standard transactional data set for
+    premium validation and settlement, claims matching at FNOL, tax and regulatory reporting;
+    aligned to ACORD technical standards and to the Market Reform Contract (MRC v3).
+- type: Documentation
+  url: https://www.lloyds.com/market-resources/delegated-authorities/market-knowledge/reporting-standards
+  name: Coverholder and Delegated Claims Reporting Standards
+  description: Mandated core reporting data set for binding authority and coverholder agreements,
+    with premium, claims and ELTO reporting templates.
+- type: Documentation
+  url: https://www.lloyds.com/insights/news/lloyds-provides-acord-membership-for-all-coverholders
+  name: ACORD Membership for Coverholders
+  description: Lloyd's provides free custom ACORD membership to all coverholders, giving access to
+    ACORD Delegated Authority Data Standards.
+- type: GitHubOrganization
+  url: https://github.com/lloydsdigital
+  name: Lloyd's Digital
+  description: GitHub organisation referenced by the Lloyd's API portal for the placing-api sample
+    application; no public repositories — code access required a GitHub challenge through the
+    portal.
+- type: GitHubOrganization
+  url: https://github.com/LloydsOfLondon
+  name: Lloyd's Market Community
+  description: "\"A community for anyone interested in the Lloyd's of London insurance market\" —
+    organisation exists with zero public repositories."
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
