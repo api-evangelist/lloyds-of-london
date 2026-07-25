@@ -1,0 +1,13 @@
+{
+  "submissionReference": "B1234AB12321",
+  "submissionVersionNumber": 1,
+  "submissionUnderwriterId": "B11111",
+  "isDraftFlag": true,
+  "senderActionCode": "QUOTE",
+  "senderNote": "Thank you, here is my Quoteslip, attached. Regards, U.",
+  "senderDocumentIds": [
+    "U_10001"
+  ],
+  "underwriterQuoteReference": "PPQuote1",
+  "underwriterQuoteValidUntilDate": "2021-01-15"
+}

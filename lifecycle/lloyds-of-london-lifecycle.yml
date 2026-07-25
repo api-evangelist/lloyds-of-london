@@ -1,0 +1,126 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+  (section 5.10 Versioning) and
+  https://web.archive.org/web/20210128061829/https://developer.lloyds.com/placingsubmissionandquote-v1/Key-Details-On-API
+docs:
+- https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+- https://web.archive.org/web/20210128061829/https://developer.lloyds.com/placingsubmissionandquote-v1/Key-Details-On-API
+- https://web.archive.org/web/20200930083933/https://developer.lloyds.com/Get-Started/RoadMap
+description: >-
+  Lloyd's publishes a genuinely rigorous API compatibility policy inside the Base API Standard -
+  a Major.Minor scheme with an explicit, itemised table of which changes are allowed in a minor
+  versus a major increment - but does NOT publish a sunset/deprecation policy, an SLA, or a
+  status page for its market APIs. Operational transparency sits with LIMOSS, which runs the
+  gateway and holds the service SLA, not with Lloyd's. The developer portal that carried the
+  release notes has been retired.
+versioning:
+  scheme: Major.Minor
+  major_in: uri-path
+  minor_signalling: >-
+    Consumers select an endpoint version; the major version is encoded in the URI path, e.g.
+    /Lloyds/CatastropheCodes/v1/ and /PPL/Lloyds/Placing/V1.
+  granularity: >-
+    Each API endpoint is versioned independently of every other endpoint, and endpoints should
+    cover the smallest reasonable set of related and indivisible resources.
+  current:
+  - {api: "Lloyd's Placing API - Submission and Quote", endpoint_version: '1.10', developer_tag: v1.10.202004160916, build_date: '2020-04-16'}
+  - {api: "Lloyd's Catastrophe Codes API", endpoint_version: v1, note: 'live on Production, PreProd and Sandbox as of 2026-07-25'}
+  compatibility_policy:
+    minor:
+      guarantee: >-
+        Existing clients must be able to interact with a provider on any later minor version of
+        the same major, without invalidating or changing the meaning of the interaction. Both
+        syntactic and semantic backward compatibility must be maintained.
+      allowed:
+      - Add a new resource to the endpoint
+      - Add a new view resource to the endpoint
+      - Add a new expand field to a resource
+      - Add a new sort field to a resource
+      - Add a new filter field to a resource
+      - Add a new optional and ignorable field to a resource
+      - Support an additional content type for a resource
+      - Enlarge the set of supported authorisation protocols
+      disallowed:
+      - Add a new optional but material field to a resource received by a client
+      - Add a new optional but vital field to a resource
+      - Add a new mandatory field to a resource
+      - Change the type (value space) of a field
+      - Change the default content type for a resource
+      - Remove a resource from an endpoint
+      - Remove a field from a resource
+      - Remove sort, expand or filter support from a resource
+      - Remove support for a content type from a resource
+    major:
+      guarantee: >-
+        No expectation of compatibility between different major versions; both backward and
+        forward compatibility may be broken, artefacts may be removed and new mandatory fields
+        added.
+release_channels:
+- {name: Production Release, description: 'Formally released, version controlled API package.'}
+- {name: Candidate Release, description: 'Automatic package from the master development branch, indicating a version in good standing to promote to Production if it passes internal and external testing.'}
+- {name: Development Snapshot, description: 'Automatic package from the master development branch; explicitly not official, partial automated testing only, likely to go out of date.'}
+deprecation:
+  policy_url: https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+  policy_type: version-compatibility rules (what may change in a minor vs a major increment)
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No Sunset or Deprecation response header support, no retirement timetable and no
+    end-of-life window are published. What Lloyd's publishes is a change-compatibility contract,
+    not a deprecation contract.
+sla:
+  published_by_lloyds: false
+  note: >-
+    "For information on onboarding to LIMOSS environment and to discuss LIMOSS service SLA,
+    please contact LIMOSS" - the SLA for the API Gateway is a LIMOSS matter, contracted per
+    onboarded organisation, and is not published by Lloyd's.
+  operator: LIMOSS (https://limoss.london/)
+status_page:
+  published: false
+  probes:
+  - {url: 'https://status.lloyds.com/', status: '000 - no DNS'}
+  - {url: 'https://status.londonmarketgroup.co.uk/', status: '000 - no DNS'}
+  - {url: 'https://www.lloyds.com/status', status: 404}
+  substitute: >-
+    Each endpoint must implement an unauthenticated /health meta resource returning 2XX healthy /
+    5XX unhealthy - a per-endpoint health signal in place of a market-wide status page. Probed
+    live 2026-07-25: https://api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1/health -> 200
+    and https://sand-api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1/health -> 200.
+retired:
+- surface: Lloyd's API Development Portal (developer.lloyds.com)
+  launched: '2020-06-08'
+  classification: BETA
+  last_archived_200: '2022-01-25'
+  redirecting_since: '2024-04-06'
+  current_state: HTTPS times out; HTTP 301 to https://www.lloyds.com/
+- surface: "Lloyd's Placing API - Submission and Quote v1 endpoints"
+  documented_base_url: https://api.londonmarketgroup.co.uk/PPL/Lloyds/Placing/V1
+  probed: '2026-07-25'
+  result: >-
+    404 {"statusCode": 404, "message": "Resource not found"} on the documented base path and on
+    the /Lloyds/Placing/v1 path used in the published examples, on both the Production and
+    Sandbox gateways. The Placing endpoints are no longer routed.
+live:
+- surface: "Lloyd's Catastrophe Codes API v1"
+  hosts:
+  - {env: Production, url: 'https://api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1'}
+  - {env: Sandbox, url: 'https://sand-api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1'}
+  probed: '2026-07-25'
+  result: >-
+    /health returns 200 anonymously on both; /version and /CatastropheCodes return
+    401 "Client certificate is missing" - the mTLS gate is live and enforcing.
+roadmap:
+  published: false
+  archived: https://web.archive.org/web/20200930083933/https://developer.lloyds.com/Get-Started/RoadMap
+  note: >-
+    A short/mid-term delivery roadmap was published on the retired portal (code snippets, explainer
+    videos, hosted Intelligent Test Harness, instrumentation and diagnostics service, streamlined
+    SIT/PreProd onboarding, and a "security simplification project for quicker implementation of
+    authentication"). None of it is published today, and no successor roadmap exists.
+related:
+- changelog/lloyds-of-london-changelog.yml
+- conventions/lloyds-of-london-conventions.yml
+- sandbox/lloyds-of-london-sandbox.yml

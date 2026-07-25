@@ -1,0 +1,19 @@
+﻿# Hey there! 👋, welcome to the Lloyds' Security.txt 
+# Learn more about security.txt standard at: https://securitytxt.org/
+
+# Thanks for helping us keep our systems safe. Here’s how you can report security issues.
+Contact: mailto:securityreporting@lloyds.com
+
+# Encrypting is great for privacy, but if it’s a barrier, don’t sweat it. We don’t want to miss what you’ve found!
+# No PGP key here because we want to keep the route for reporting as open as possible.
+
+# Shout-Outs:
+# We love giving credit where it’s due. If you want your efforts highlighted, we’re happy to oblige:
+#Acknowledgments: https://www.lloyds.com/security-reports (Program coming soon!)
+
+# We Speak Your Language:
+# We prefer reports in English, but we appreciate the effort in any language!
+Preferred-Languages: en
+
+# Double-check you’re in the right place with our canonical link:
+Canonical: https://www.lloyds.com/.well-known/security.txt

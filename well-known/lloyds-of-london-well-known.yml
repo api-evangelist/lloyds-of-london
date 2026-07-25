@@ -1,0 +1,88 @@
+generated: '2026-07-25'
+method: searched
+source: live probes of every Lloyd's / London Market API Gateway host on 2026-07-25
+description: >-
+  Well-known discovery surface for Lloyd's of London. Two distinct estates are probed: the
+  Corporation of Lloyd's public web estate (www.lloyds.com), which publishes a genuine RFC 9116
+  security.txt; and the London Market API Gateway (londonmarketgroup.co.uk) that fronts the
+  Lloyd's market APIs, which publishes the OpenID Connect discovery document and JWKS mandated
+  by section 5.12 of the Lloyd's Base API Standard ("A file MUST be made available at the
+  well-known URI of https://api.londonmarketgroup.co.uk/discovery/.well-known/openid-configuration,
+  this file must reference a JWKS file"). All three gateway environments (Production, PreProd,
+  Sandbox) serve the document anonymously.
+hosts:
+- host: https://www.lloyds.com
+  role: corporation web estate
+- host: https://api.londonmarketgroup.co.uk
+  role: London Market API Gateway - Production
+- host: https://preprod-api.londonmarketgroup.co.uk
+  role: London Market API Gateway - PreProd
+- host: https://sand-api.londonmarketgroup.co.uk
+  role: London Market API Gateway - Sandbox
+- host: https://api.lloyds.com
+  role: Lloyd's Azure API Management gateway (undocumented)
+documents:
+- host: https://www.lloyds.com
+  path: /.well-known/security.txt
+  standard: RFC 9116
+  status: 200
+  file: lloyds-of-london-security.txt
+  note: >-
+    Real security.txt. Declares Contact mailto:securityreporting@lloyds.com, Preferred-Languages
+    en, and a Canonical URL. Commented-out Acknowledgments line points at
+    https://www.lloyds.com/security-reports marked "Program coming soon!" - that hall-of-fame page
+    is now live. No Expires field is published, which RFC 9116 section 2.5.5 requires.
+- host: https://api.londonmarketgroup.co.uk
+  path: /discovery/.well-known/openid-configuration
+  standard: OpenID Connect Discovery 1.0
+  status: 200
+  file: lloyds-of-london-openid-configuration.json
+  note: >-
+    Minimal discovery document mandated by the Lloyd's Base API Standard. Publishes only
+    issuer (https://api.londonmarketgroup.co.uk/) and jwks_uri
+    (https://api.londonmarketgroup.co.uk/discovery/keys). It exists to let API Providers verify
+    the JWT the gateway signs on the inbound leg, not to bootstrap a consumer OAuth flow -
+    there is no authorization_endpoint or token_endpoint; consumer tokens come from the LIMOSS
+    Common Services Azure Active Directory tenant.
+- host: https://api.londonmarketgroup.co.uk
+  path: /discovery/keys
+  standard: RFC 7517 JWKS
+  status: 200
+  file: lloyds-of-london-jwks.json
+- host: https://preprod-api.londonmarketgroup.co.uk
+  path: /discovery/.well-known/openid-configuration
+  standard: OpenID Connect Discovery 1.0
+  status: 200
+  file: lloyds-of-london-openid-configuration-preprod.json
+- host: https://preprod-api.londonmarketgroup.co.uk
+  path: /discovery/keys
+  standard: RFC 7517 JWKS
+  status: 200
+  file: lloyds-of-london-jwks-preprod.json
+- host: https://sand-api.londonmarketgroup.co.uk
+  path: /discovery/.well-known/openid-configuration
+  standard: OpenID Connect Discovery 1.0
+  status: 200
+  file: lloyds-of-london-openid-configuration-sandbox.json
+- host: https://sand-api.londonmarketgroup.co.uk
+  path: /discovery/keys
+  standard: RFC 7517 JWKS
+  status: 200
+  file: lloyds-of-london-jwks-sandbox.json
+misses:
+- {host: 'https://www.lloyds.com', path: /.well-known/openid-configuration, status: 404}
+- {host: 'https://www.lloyds.com', path: /.well-known/oauth-authorization-server, status: 404}
+- {host: 'https://www.lloyds.com', path: /.well-known/api-catalog, status: 404}
+- {host: 'https://www.lloyds.com', path: /.well-known/ai-plugin.json, status: 404}
+- {host: 'https://www.lloyds.com', path: /.well-known/change-password, status: 404}
+- {host: 'https://www.lloyds.com', path: /llms.txt, status: 200, note: 'returns an empty body -
+    not a real llms.txt'}
+- {host: 'https://api.lloyds.com', path: /.well-known/security.txt, status: 404}
+- {host: 'https://api.lloyds.com', path: /.well-known/api-catalog, status: 404}
+- {host: 'https://api.lloyds.com', path: /.well-known/openid-configuration, status: 404}
+- {host: 'https://api.londonmarketgroup.co.uk', path: /.well-known/openid-configuration, status: 404,
+    note: 'the gateway serves the document only under the /discovery prefix'}
+- {host: 'https://api.londonmarketgroup.co.uk', path: /.well-known/security.txt, status: 404}
+- {host: 'https://api.londonmarketgroup.co.uk', path: /.well-known/oauth-authorization-server, status: 404}
+- {host: 'https://api.londonmarketgroup.co.uk', path: /.well-known/api-catalog, status: 404}
+- {host: 'https://sand-api.londonmarketgroup.co.uk', path: /.well-known/security.txt, status: 404}

@@ -1,0 +1,45 @@
+{
+  "items": [
+    {
+      "underwriterOrganisationId": "1000097",
+      "underwriterOrganisationName": "API UnderwritingFirm1",
+      "underwriterUsers": [
+        {
+          "underwriterUserEmailAddress": "A.N.Underwriter@UnderwritingFirm1.com",
+          "underwriterUserFullName": "A N Underwriter",
+          "underwriterUserContactNumber": "01234 567 111"
+        },
+        {
+          "underwriterUserEmailAddress": "A.N.OtherUnderwriter@UnderwritingFirm1.com",
+          "underwriterUserFullName": "A N Other Underwriter",
+          "underwriterUserContactNumber": "01234 567 112"
+        }
+      ],
+      "brokerDepartmentId": "1"
+    },
+    {
+      "underwriterOrganisationId": "1000096",
+      "underwriterOrganisationName": "API UnderwritingFirm2",
+      "underwriterUsers": [
+        {
+          "underwriterUserEmailAddress": "A.N.Underwriter@UnderwritingFirm2.com",
+          "underwriterUserFullName": "A N Underwriter2",
+          "underwriterUserContactNumber": "01234 765 111"
+        },
+        {
+          "underwriterUserEmailAddress": "A.N.OtherUnderwriter@UnderwritingFirm2.com",
+          "underwriterUserFullName": "A N Other Underwriter2",
+          "underwriterUserContactNumber": "01234 765 112"
+        }
+      ],
+      "brokerDepartmentId": "1"
+    }
+  ],
+  "total": 2,
+  "_links": [
+    {
+      "rel": "canonical",
+      "href": "https://api.londonmarketgroup.co.uk/Lloyds/Placing/V1/UnderwriterOrganisations?_order=-_last_modified&_pageSize=200&BrokerDepartmentId;=1&NameEmailOrg;=contains(API)&_pageNum=1"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "_links": [
+    {
+      "rel": "canonical",
+      "href": "https://sand-api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1/CatastropheCodes/17E"
+    }
+  ],
+  "id": "17E",
+  "Code": "17E",
+  "Definition": "Typhoon Hato, 20 August 2017 and ongoing, affecting Hong Kong, Macau and South China",
+  "EventStartDate": "2017-08-20",
+  "EventYear": 2017
+}

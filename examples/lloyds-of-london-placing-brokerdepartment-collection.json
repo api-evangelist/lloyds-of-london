@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "brokerDepartmentId": "1",
+      "brokerDepartmentName": "BrokerFirm Dept 1",
+      "brokerCodes": [
+        "1234",
+        "4321"
+      ],
+      "brokerUsers": [
+        {
+          "brokerUserEmailAddress": "A.N.Broker@BrokerFirm.com",
+          "brokerUserFullName": "A N Broker",
+          "brokerUserContactNumber": "01234 567 890"
+        },
+        {
+          "brokerUserEmailAddress": "A.N.Technician@BrokerFirm.com",
+          "brokerUserFullName": "A N Technician",
+          "brokerUserContactNumber": "01234 567 891"
+        }
+      ]
+    }
+  ],
+  "total": 1,
+  "_links": [
+    {
+      "rel": "canonical",
+      "href": "https://api.londonmarketgroup.co.uk/Lloyds/Placing/V1/brokerdepartments?_order=-_last_modified"
+    }
+  ]
+}

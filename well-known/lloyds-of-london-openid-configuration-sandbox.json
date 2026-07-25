@@ -1,0 +1,4 @@
+{
+  "jwks_uri": "https://sand-api.londonmarketgroup.co.uk/discovery/keys",
+  "issuer": "https://sand-api.londonmarketgroup.co.uk/"
+}

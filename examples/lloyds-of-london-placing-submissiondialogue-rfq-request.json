@@ -1,0 +1,12 @@
+{
+  "submissionReference": "B1234AB12321",
+  "submissionVersionNumber": 1,
+  "submissionUnderwriterId": "B11111",
+  "isDraftFlag": false,
+  "senderActionCode": "RFQ",
+  "senderNote": "Hi Underwriter, Please can you provide a quote on this Submission? Thanks, Broker.",
+  "senderDocumentIds": [
+    "B_00001",
+    "B_00002"
+  ]
+}

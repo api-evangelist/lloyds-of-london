@@ -1,0 +1,81 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  https://web.archive.org/web/20210128061829/https://developer.lloyds.com/placingsubmissionandquote-v1/Key-Details-On-API
+docs: https://web.archive.org/web/20210128061829/https://developer.lloyds.com/placingsubmissionandquote-v1/Key-Details-On-API
+description: >-
+  Lloyd's published per-release notes for its market APIs on the API Development Portal, in a
+  structured Release Summary / New Features / Enhancements / Fixes / Known Problems and Issues
+  format, alongside the release version, developer tag and build date. Only one production release
+  was ever published before the portal was retired. There is no live changelog today - this record
+  is the archived one, preserved because it is the only versioned release history Lloyd's has
+  published for an API.
+scheme: Major.Minor with a dated developer tag (v{major}.{minor}.{yyyymmddhhmm})
+source_state: retired - the publishing surface (developer.lloyds.com) now redirects to www.lloyds.com
+current_version: '1.10'
+entries:
+- version: '1.10'
+  api: "Lloyd's Placing API - Submission and Quote v1"
+  developer_tag: v1.10.202004160916
+  build_date: '2020-04-16'
+  channel: Production Release
+  breaking: false
+  summary: >-
+    First release of the Placing APIs supporting the Submission and Quote components of the
+    placement process.
+  endpoint:
+    name: Placing
+    url: https://api.londonmarketgroup.co.uk/PPL/Lloyds/Placing/V1
+    version: '1.10'
+  additions:
+  - resource: BrokerDepartment
+    changes: [Retrieve information about Broker Departments and their Broker Users]
+  - resource: Submission
+    changes:
+    - Create Submissions and Submission versions
+    - Update Submissions
+    - Retrieve/View Submission details
+    - Delete Submissions
+  - resource: SubmissionDocument
+    changes:
+    - Upload Market Reform Contracts / Quote Documents to a Submission
+    - Upload Supporting Documents to a Submission
+    - Update document information
+    - View document information and download document content
+    - Suggest replacement documents for a Submission
+    - Delete documents
+  - resource: SubmissionUnderwriter
+    changes:
+    - Add approved Carriers (Markets) and Underwriters to a Submission
+    - Update the Underwriter participating on a Submission
+    - Remove a carrier (market) from participating on a Submission
+  - resource: SubmissionDialogue
+    changes:
+    - Send Carriers a Request for Quote for a Submission
+    - "Send Brokers an Underwriter response: Reject, Express an Interest, Request For Information, or Quote"
+    - Update Underwriter responses (in draft state) before sending to a Broker
+    - Reference documents to be shared with the message recipient
+  - resource: UnderwriterOrganisation
+    changes: [Retrieve/Search Carriers (Markets) and Underwriter User information]
+  enhancements: []
+  fixes: []
+  known_issues:
+  - The error description for error code StringTooShort is incomplete - it does not state the
+    minimum number of characters required.
+  - The error description for error code StringTooLong is incomplete - it does not state the
+    maximum number of characters permitted.
+  artifacts:
+  - name: Swagger_PlacingSubmissionAndQuote_v1.10
+    url: https://developer.lloyds.com/placingsubmissionandquote-v1/static/resources/Swagger_PlacingSubmissionAndQuote_v1.10.202004160916.json
+    harvested: false
+    note: >-
+      Offered for download from the portal as an OpenAPI 3.0 document. Unreachable - the host no
+      longer completes a TLS connection and the file was never captured by the Internet Archive
+      (a CDX query over developer.lloyds.com/placingsubmissionandquote-v1/static/* returns no
+      rows). Nothing was reconstructed.
+  previous_production_releases: none
+  candidate_releases: none
+  development_snapshots: none
+related:
+- lifecycle/lloyds-of-london-lifecycle.yml
+- errors/lloyds-of-london-error-codes.yml

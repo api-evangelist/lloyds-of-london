@@ -21,7 +21,15 @@ description: >-
   onboarded to LIMOSS Common Services, registered in the Common Services Azure Active Directory
   tenant, and register an X.509 certificate before it can call anything. There is no public,
   self-serve Lloyd's API, no public sandbox and no public downloadable specification reachable
-  today — the honest record for this market body is documentation-and-standards-first.
+  today — the honest record for this market body is documentation-and-standards-first. What
+  Lloyd's does still operate, verified by live probe, is a genuine gated API estate: three
+  isolated gateway environments (Sandbox, PreProd, Production), an OpenID Connect discovery
+  document and JWKS published on each, and a routed Catastrophe Codes v1 endpoint whose
+  unauthenticated /health meta resource answers 200 while its data resources return
+  401 "Client certificate is missing". Its most reusable public artifact is the Lloyd's Base API
+  Standard — a normative RFC 2119 document fixing the resource model, query grammar, collection
+  and error envelopes, versioning compatibility rules and the dual mutual-TLS + JWT security model
+  for every API published to the market.
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
 - Insurance
@@ -108,9 +116,107 @@ apis:
     url: https://web.archive.org/web/20200610082013/https://developer.lloyds.com/Explore-Innovate
   - type: Documentation
     url: https://www.lloyds.com/market-resources/delegated-authorities/market-knowledge/reporting-standards
+- aid: lloyds-of-london:lloyds-catastrophe-codes-api
+  name: Lloyd's Catastrophe Codes API v1
+  description: >-
+    Lloyd's catastrophe event reference data served from the London Market API Gateway — the
+    market's canonical codes for aggregating losses to a named catastrophe (e.g. 17E "Typhoon
+    Hato, 20 August 2017 and ongoing, affecting Hong Kong, Macau and South China"), each carrying
+    Code, Definition, EventStartDate, EventEndDate and EventYear. This API was never listed in the
+    Lloyd's API catalogue; it surfaced because the Lloyd's Base API Standard uses it for every
+    worked example of the identity pseudo-field and the collection wrapper document. It is the
+    only Lloyd's API surface still routed on the gateway: probed on 2026-07-25 the unauthenticated
+    /health meta resource mandated by section 5.11 of the Base API Standard returns 200 on both
+    Production and Sandbox, while /CatastropheCodes and /version return
+    401 {"Code":401,"Message":"Client certificate is missing."} — the mutual-TLS gate is live and
+    enforcing. Access requires LIMOSS Common Services onboarding, an Azure AD on-behalf-of token
+    with scp=user_impersonation, and a registered X.509 certificate per environment. No
+    specification is published.
+  humanURL: https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+  baseURL: https://api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1
+  tags:
+  - Catastrophe
+  - Reference Data
+  - London Market
+  - Reinsurance
+  properties:
+  - type: Documentation
+    url: https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+    name: Lloyd's Base API Standard
+    description: The normative standard this endpoint implements, and the source of its published
+      payload examples.
+  - type: Examples
+    url: examples/_index.yml
+  - type: Sandbox
+    url: sandbox/lloyds-of-london-sandbox.yml
+    name: Sandbox environment
+    description: https://sand-api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1 — live, /health
+      returns 200; access is partner-gated via LIMOSS.
+  - type: Authentication
+    url: authentication/lloyds-of-london-authentication.yml
+  - type: WellKnown
+    url: https://api.londonmarketgroup.co.uk/discovery/.well-known/openid-configuration
+    name: OpenID Connect discovery
+    description: Live OIDC discovery document mandated by section 5.12.2 of the Lloyd's Base API
+      Standard; references the gateway JWKS at /discovery/keys.
 common:
+- type: VulnerabilityDisclosure
+  url: security/lloyds-of-london-vulnerability-disclosure.yml
+- type: Security
+  url: https://www.lloyds.com/security-reports
+  name: Responsible Disclosure Programme
+  description: Lloyd's responsible disclosure programme and researcher hall of fame; reports go to
+    securityreporting@lloyds.com per the published RFC 9116 security.txt.
+- type: SecurityTxt
+  url: well-known/lloyds-of-london-security.txt
+- type: DomainSecurity
+  url: security/lloyds-of-london-domain-security.yml
+- type: WellKnown
+  url: well-known/lloyds-of-london-well-known.yml
+  name: Well-known discovery surface
+  description: Harvested /.well-known/ documents across the Lloyd's web estate and all three London
+    Market API Gateway environments — security.txt plus live OIDC discovery and JWKS.
+- type: Authentication
+  url: authentication/lloyds-of-london-authentication.yml
+- type: OAuthScopes
+  url: scopes/lloyds-of-london-scopes.yml
+- type: Conventions
+  url: conventions/lloyds-of-london-conventions.yml
+  name: Lloyd's Base API Standard as structured conventions
+  description: Resource model, paging/ordering/filtering/selection/expansion grammar, collection
+    and error envelopes, concurrency, versioning and meta resources.
+- type: ErrorCatalog
+  url: errors/lloyds-of-london-error-codes.yml
+  name: Placing API error-code registry
+  description: 107 named error codes plus the Base API Standard's HTTP status mapping rules.
+- type: Examples
+  url: examples/_index.yml
+  name: Published request/response examples
+  description: 22 payload examples captured verbatim from Lloyd's own documentation.
+- type: DataModel
+  url: data-model/lloyds-of-london-data-model.yml
+- type: Lifecycle
+  url: lifecycle/lloyds-of-london-lifecycle.yml
+- type: ChangeLog
+  url: changelog/lloyds-of-london-changelog.yml
+- type: Conformance
+  url: conformance/lloyds-of-london-conformance.yml
+- type: Sandbox
+  url: sandbox/lloyds-of-london-sandbox.yml
+- type: LLMsTxt
+  url: llms/lloyds-of-london-llms.txt
 - type: Website
   url: https://www.lloyds.com/
+- type: Support
+  url: https://www.lloyds.com/contact-us
+  name: Contact Lloyd's
+- type: Blog
+  url: https://www.lloyds.com/news-and-insights
+  name: News and Insights
+- type: TermsOfService
+  url: https://www.lloyds.com/help/terms-and-conditions
+- type: PrivacyPolicy
+  url: https://www.lloyds.com/help/privacy
 - type: Documentation
   url: https://www.lloyds.com/market-resources/requirements-and-standards
   name: Requirements and Standards

@@ -1,0 +1,41 @@
+{
+  "_links": [
+    {
+      "rel": "canonical",
+      "href": "https://api.londonmarketgroup.co.uk/Lloyds/Placing/V1/SubmissionUnderwriters/B1234AB12321_1_B11111"
+    }
+  ],
+  "id": "B1234AB12321_1_B11111",
+  "submissionReference": "B1234AB12321",
+  "submissionVersionNumber": 1,
+  "submissionUnderwriterId": "B11111",
+  "submissionUnderwriterStatusCode": "DRFT",
+  "submissionVersionDescription": "Submission Version 1",
+  "brokerOrganisationName": "API BrokerFirm1",
+  "brokerDepartmentName": "API BrokerFirm Dept 1",
+  "brokerUserFullName": "A N Broker",
+  "brokerUserEmailAddress": "A.N.Broker@BrokerFirm.com",
+  "brokerUserContactNumber": "01234 567 890",
+  "underwriterOrganisationId": "1000097",
+  "underwriterOrganisationName": "API UnderwritingFirm1",
+  "underwriterUserFullName": "A N Underwriter",
+  "underwriterUserEmailAddress": "A.N.Underwriter@UnderwritingFirm1.com",
+  "communicationsMethodCode": "PLATFORM",
+  "programmeId": 12123,
+  "programmeReference": "B1234PP",
+  "programmeDescription": "2020 Property Programme",
+  "contractReference": "B1234AB12321",
+  "contractDescription": "Property 1 Initial Submission",
+  "contractTypeCode": "reinsurance_contract",
+  "insuredOrReinsured": "PP Property Managers",
+  "coverTypeCode": "facultative_proportional",
+  "classOfBusinessCode": "property_unspecified",
+  "riskRegionCode": "worldwide",
+  "periodOfCover": {
+    "insurancePeriod": {
+      "inceptionDate": "2020-01-01",
+      "expiryDate": "2020-12-31"
+    }
+  },
+  "createdDateTime": "2020-01-01T11:41:00+00:00"
+}

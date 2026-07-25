@@ -1,0 +1,4 @@
+{
+  "jwks_uri": "https://api.londonmarketgroup.co.uk/discovery/keys",
+  "issuer": "https://api.londonmarketgroup.co.uk/"
+}

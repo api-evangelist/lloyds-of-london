@@ -1,0 +1,67 @@
+{
+  "items": [
+    {
+      "id": "B1234AB12321_1",
+      "submissionReference": "B1234AB12321",
+      "submissionVersionNumber": 1,
+      "submissionVersionDescription": "Submission Version 1",
+      "techinicianUserEmailAddress": "A.N.Technician@BrokerFirm.com",
+      "createdDateTime": "2020-01-01T08:41:00+00:00",
+      "submissionStatusCode": "DRFT",
+      "brokerDepartmentId": "1",
+      "brokerUserEmailAddress": "A.N.Broker@BrokerFirm.com",
+      "brokerCode": "1234",
+      "programmeId": 12123,
+      "programmeReference": "B1234PP",
+      "programmeDescription": "2020 Property Programme",
+      "contractReference": "B1234AB12321",
+      "contractDescription": "Property 1 Initial Submission",
+      "contractTypeCode": "reinsurance_contract",
+      "insuredOrReinsured": "PP Property Managers",
+      "coverTypeCode": "facultative_proportional",
+      "classOfBusinessCode": "property_unspecified",
+      "riskRegionCode": "worldwide",
+      "periodOfCover": {
+        "insurancePeriod": {
+          "inceptionDate": "2020-01-01",
+          "expiryDate": "2020-12-31"
+        }
+      }
+    },
+    {
+      "id": "B1234AB12321_2",
+      "submissionReference": "B1234AB12321",
+      "submissionVersionNumber": 2,
+      "submissionVersionDescription": "Submission Version 2 Updated",
+      "technicianUserEmailAddress": "A.N.Technician@BrokerFirm.com",
+      "createdDateTime": "2020-01-01T09:59:00+00:00",
+      "submissionStatusCode": "DRFT",
+      "brokerDepartmentId": "1",
+      "brokerUserEmailAddress": "A.N.Broker@BrokerFirm.com",
+      "brokerCode": "1234",
+      "programmeId": 12123,
+      "programmeReference": "",
+      "programmeDescription": "",
+      "contractReference": "",
+      "contractDescription": "",
+      "contractTypeCode": "reinsurance_contract",
+      "insuredOrReinsured": "PP Property Managers",
+      "coverTypeCode": "facultative_proportional",
+      "classOfBusinessCode": "property_unspecified",
+      "riskCountryCode": "UK",
+      "periodOfCover": {
+        "insuranceDuration": {
+          "durationNumber": 12,
+          "durationUnit": "months"
+        }
+      }
+    }
+  ],
+  "total": 2,
+  "_links": [
+    {
+      "rel": "canonical",
+      "href": "https://api.londonmarketgroup.co.uk/Lloyds/Placing/v1/submissions?_pageSize=200&_pageNum=1"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "items": [
+    {
+      "id": "B432198765_1_B_00001",
+      "submissionReference": "B432198765",
+      "submissionVersionNumber": 1,
+      "documentId": "B_00001",
+      "fileName": "MRC_Placingslip.docx",
+      "fileMIMEType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "fileSizeInBytes": 11467,
+      "documentType": "document_placing_slip",
+      "documentDescription": "Placing Slip",
+      "shareableToAllMarketsFlag": true,
+      "suppliedBy": "B",
+      "createdDateTime": "2020-01-01T12:24:00+00:00"
+    },
+    {
+      "id": "B432198765_1_B_10101",
+      "submissionReference": "B432198765",
+      "submissionVersionNumber": 1,
+      "documentId": "B_10101",
+      "fileName": "MailingPreferences.pdf",
+      "fileMIMEType": "application/pdf",
+      "fileSizeInBytes": 141,
+      "documentType": "other_documentation",
+      "documentDescription": "Mailing Preferences",
+      "shareableToAllMarketsFlag": false,
+      "suppliedBy": "B",
+      "createdDateTime": "2020-01-01T12:32:00+00:00"
+    }
+  ],
+  "total": 2,
+  "_links": [
+    {
+      "rel": "canonical",
+      "href": "https://api.londonmarketgroup.co.uk/Lloyds/Placing/V1/SubmissionDocuments?_order=-_last_modified&_pageSize=200&SubmissionReference;=B432198765&_pageNum=1"
+    }
+  ]
+}

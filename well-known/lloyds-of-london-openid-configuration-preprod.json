@@ -1,0 +1,4 @@
+{
+  "jwks_uri": "https://preprod-api.londonmarketgroup.co.uk/discovery/keys",
+  "issuer": "https://preprod-api.londonmarketgroup.co.uk/"
+}

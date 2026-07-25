@@ -266,3 +266,68 @@ actions:
     documentation, with archived documentation URLs as provenance. No OpenAPI/Swagger file was
     saved because none could be retrieved: the one documented specification URL is unreachable
     (portal retired) and unarchived. Nothing was reconstructed or inferred.
+enrichment:
+  round: '2026-07-25'
+  method: search + probe + derive (API Evangelist enrichment pipeline)
+  correctionsToFirstPass:
+  - finding: >-
+      The first pass recorded api.londonmarketgroup.co.uk as returning "the same APIM 404
+      anonymously" and concluded the gateway was a dead backing surface. That is only true of the
+      documented Placing paths. A deeper probe found a LIVE, routed Lloyd's endpoint on the same
+      gateway.
+    evidence:
+    - {url: 'https://api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1/health', status: 200}
+    - {url: 'https://sand-api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1/health', status: 200}
+    - {url: 'https://api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1/CatastropheCodes', status: 401,
+       body: '{"Code":401,"Message":"Client certificate is missing. Ref: ..."}'}
+    - {url: 'https://api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1/version', status: 401}
+    note: >-
+      The behaviour matches section 5.11 of the Lloyd's Base API Standard exactly — /health is
+      unauthenticated, /version and all data resources are not. The Catastrophe Codes API was never
+      in the Lloyd's API catalogue; it was found because the Base API Standard uses it for every
+      worked payload example. Added to apis.yml as a fourth API.
+  - finding: >-
+      The first pass recorded /.well-known/openid-configuration as 404 on api.lloyds.com and
+      www.lloyds.com and stopped there. The Lloyd's Base API Standard mandates the document at a
+      NON-standard prefix — "/discovery/.well-known/openid-configuration" — and it is live on all
+      three gateway environments.
+    evidence:
+    - {url: 'https://api.londonmarketgroup.co.uk/discovery/.well-known/openid-configuration', status: 200}
+    - {url: 'https://preprod-api.londonmarketgroup.co.uk/discovery/.well-known/openid-configuration', status: 200}
+    - {url: 'https://sand-api.londonmarketgroup.co.uk/discovery/.well-known/openid-configuration', status: 200}
+    - {url: 'https://api.londonmarketgroup.co.uk/discovery/keys', status: 200, note: RSA JWKS}
+    saved: well-known/
+  - finding: Lloyd's publishes a real RFC 9116 security.txt and runs a named Responsible Disclosure Programme.
+    evidence:
+    - {url: 'https://www.lloyds.com/.well-known/security.txt', status: 200, contact: securityreporting@lloyds.com}
+    - {url: 'https://www.lloyds.com/security-reports', status: 200, note: 'live hall of fame crediting named researchers'}
+    gap: no Expires field, no Policy field, no PGP key, no bug bounty
+  - finding: >-
+      A third gateway environment exists beyond the two named in the first pass — preprod-api
+      .londonmarketgroup.co.uk resolves and serves discovery, matching the Base API Standard's
+      documented three-environment estate (Sand, PreProd, Prod).
+  reconfirmed:
+  - The documented Swagger/OpenAPI 3.0 file for Placing v1.10 remains unreachable and unarchived. A
+    fresh Wayback CDX enumeration of developer.lloyds.com* returned 99 captured URLs, none of them
+    a .json, .yaml or .zip. No spec was reconstructed.
+  - The Placing API endpoints are no longer routed — 404 on the documented /PPL/Lloyds/Placing/V1
+    base and on the /Lloyds/Placing/v1 path used in the published examples, on both gateways.
+  - No status page, no trust center, no bug bounty platform, no public Postman collection, no
+    packages in npm/PyPI/NuGet, no MCP server, no GraphQL, no gRPC, no webhooks and no AsyncAPI.
+    Publish-subscribe is explicitly out of scope of the Base API Standard, so the event absence is
+    by design and is not a gap.
+  - The Base API Standard contains no idempotency mechanism — the string "idempoten" does not
+    appear in it. No Idempotency pointer was wired.
+  harvested:
+  - {artifact: well-known/, count: 8, note: 'index plus 7 raw documents (security.txt, 3 OIDC discovery docs, 3 JWKS)'}
+  - {artifact: conventions/, note: "the Lloyd's Base API Standard captured as structured conventions"}
+  - {artifact: authentication/, note: 'dual mutual-TLS + Azure AD on-behalf-of JWT model, JWT claim table, onboarding path'}
+  - {artifact: scopes/, note: 'the single documented scope, user_impersonation'}
+  - {artifact: errors/, count: 107, note: 'named Placing API error codes plus the status mapping rules'}
+  - {artifact: examples/, count: 22, note: "payload examples published verbatim by Lloyd's"}
+  - {artifact: data-model/, note: '7 entities and 13 relationships derived from the published payloads'}
+  - {artifact: lifecycle/, note: 'Major.Minor compatibility policy with the itemised change table'}
+  - {artifact: changelog/, note: 'Placing v1.10 release notes'}
+  - {artifact: sandbox/, note: 'three-environment estate and the LIMOSS onboarding path'}
+  - {artifact: conformance/, note: '30 standards assessed, including the deliberate absences'}
+  - {artifact: llms/, note: 'generated - www.lloyds.com/llms.txt returns 200 with an empty body'}

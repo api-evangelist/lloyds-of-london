@@ -1,0 +1,26 @@
+{
+  "_links": [
+    {
+      "rel": "canonical",
+      "href": "https://api.londonmarketgroup.co.uk/Lloyds/Placing/V1/SubmissionDialogues/B1234AB12321_1_RQ10001"
+    }
+  ],
+  "id": "",
+  "submissionReference": "B1234AB12321",
+  "submissionVersionNumber": 1,
+  "submissionDialogueId": "RQ10001",
+  "submissionUnderwriterId": "B11111",
+  "senderParticipantCode": "B",
+  "senderUserFullName": "A N Broker",
+  "senderUserEmailAddress": "A.N.Broker@BrokerFirm.com",
+  "isDraftFlag": false,
+  "statusCode": "DELV",
+  "senderActionCode": "RFQ",
+  "senderNote": "Hi Underwriter, Please can you provide a quote on this Submission? Thanks, Broker.",
+  "senderDocumentIds": [
+    "B_70132",
+    "B_70133"
+  ],
+  "createdDateTime": "2020-01-01T11:42:25+00:00",
+  "sentDateTime": "2020-01-01T11:42:26+00:00"
+}

@@ -1,0 +1,23 @@
+{
+  "submissionReference": "B1234AB12345",
+  "submissionVersionNumber": 3,
+  "submissionVersionDescription": "Submission Version 3 Updated",
+  "brokerUserEmailAddress": "A.N.Broker@BrokerFirm.com",
+  "brokerCode": "1234",
+  "programmeReference": "B1234PP",
+  "programmeDescription": "2020 Property Programme",
+  "contractReference": "",
+  "contractDescription": "",
+  "contractTypeCode": "reinsurance_contract",
+  "insuredOrReinsured": "PP Property Managers",
+  "coverTypeCode": "facultative_proportional",
+  "classOfBusinessCode": "property_unspecified",
+  "riskRegionCode": null,
+  "riskCountryCode": "UK",
+  "periodOfCover": {
+    "insuranceDuration": {
+      "durationNumber": 12,
+      "durationUnit": "months"
+    }
+  }
+}

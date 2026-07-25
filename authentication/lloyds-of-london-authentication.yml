@@ -1,0 +1,132 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+  (section 5.12 Security) and
+  https://web.archive.org/web/20200930085423/https://developer.lloyds.com/Get-Started/Authentication-Information
+docs:
+- https://web.archive.org/web/20200930085423/https://developer.lloyds.com/Get-Started/Authentication-Information
+- https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+- https://web.archive.org/web/20200930075931/https://developer.lloyds.com/Get-Started/Registration-Onboarding
+description: >-
+  Lloyd's market APIs are dual-credentialed. Every call carries TWO independent identifying
+  security tokens: a client X.509 certificate presented on the mutual-TLS handshake to the
+  London Market API Gateway (which identifies the calling APPLICATION via the certificate
+  Subject CN), and an Authorization: Bearer JWT issued by the LIMOSS Common Services Azure
+  Active Directory tenant (which identifies the PRINCIPAL). The bearer token must be an
+  on-behalf-of token carrying an "scp" claim of user_impersonation - a plain OAuth 2.0 login
+  token is explicitly not sufficient. There is no API-key path and no self-serve credential
+  issuance: certificates are registered per environment through LIMOSS onboarding.
+summary:
+  types: [mutualTLS, oauth2, openIdConnect, http]
+  http_schemes: [bearer]
+  bearer_format: JWT
+  oauth2_flows: [authorizationCode, on-behalf-of, client_credentials]
+  api_key_in: []
+  self_serve_credentials: false
+  mfa_signalled: true
+schemes:
+- name: ClientCertificate
+  type: mutualTLS
+  required: true
+  description: >-
+    The API Consumer must initiate the HTTPS connection to the API Gateway with a client X.509
+    certificate. The CN of the Subject field identifies the calling application. The certificate
+    must be signed by a CA in the Microsoft Trusted Root Certificate Program and should be an
+    Extended Validation certificate. A DIFFERENT certificate must be registered per environment
+    (Sandbox, PreProd, Production).
+  evidence: >-
+    Live probe 2026-07-25 - GET https://api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1/CatastropheCodes
+    returns 401 {"Code":401,"Message":"Client certificate is missing. Ref: ..."}
+  registration: LIMOSS API Gateway onboarding, per environment
+  sources: [Lloyd's Base API Standard section 5.12.1]
+- name: AzureADBearer
+  type: oauth2
+  required: true
+  scheme: bearer
+  bearerFormat: JWT
+  description: >-
+    Authorization: Bearer <JWT>. The JWT must be signed by a Security Token Service known to the
+    API Gateway (the Common Services Azure AD tenant) and must be an on-behalf-of token issued to
+    the calling application, carrying scp=user_impersonation. Tokens returned directly from an
+    OAuth 2.0 login are normally NOT on-behalf-of tokens; the application backend must exchange
+    them with Azure AD. Where an API validates the audience claim, the gateway may itself obtain
+    a further on-behalf-of token with the correct aud.
+  flows:
+  - flow: authorizationCode
+    authority: https://login.microsoftonline.com/{tenantId}
+    callback_path: /signin-oidc
+    response_type: code id_token
+    note: >-
+      tenantId is the SAND, PreProd or Prod Common Services tenant, supplied during onboarding.
+  - flow: on-behalf-of
+    grant_type: urn:ietf:params:oauth:grant-type:jwt-bearer
+    note: RFC 7523 JWT bearer assertion exchange, required to mint the token actually sent to the gateway.
+  - flow: client_credentials
+    note: Service-account (headless server-to-server) tokens for API consumers with no browser leg.
+  scopes: [user_impersonation]
+  sources: [Lloyd's Base API Standard section 5.12.1, Lloyd's Authentication Information page]
+- name: GatewaySignedJWT
+  type: openIdConnect
+  required: false
+  audience: API Providers (internal leg)
+  description: >-
+    After enforcing the client certificate and inbound JWT, the API Gateway acts as a Policy
+    Enforcement Point and mints a NEW signed JWT for the API Provider, embedding the original
+    consumer token in an "lmg_pkt" claim. Providers verify that JWT against the gateway's
+    published OIDC discovery document and JWKS.
+  openIdConnectUrl: https://api.londonmarketgroup.co.uk/discovery/.well-known/openid-configuration
+  jwks_uri: https://api.londonmarketgroup.co.uk/discovery/keys
+  live_status: 200 (probed 2026-07-25)
+  sources: [Lloyd's Base API Standard section 5.12.2, well-known/lloyds-of-london-well-known.yml]
+- name: XAssert
+  type: http
+  required: false
+  scheme: X-Assert
+  description: >-
+    Degraded alternative shown in the Lloyd's sample application: where the client is configured
+    with RequireOnBehalfOfToken=false, the Authorization header carries "X-Assert <user email>"
+    instead of a bearer token. Not part of the Base API Standard's mandatory rules; present in
+    the published PlacingHttpClientFactory sample.
+  sources: [Lloyd's Authentication Information page]
+jwt_claims:
+  mandatory:
+  - {claim: scp, value: user_impersonation, note: must be present on the consumer token}
+  understood:
+  - {claim: sub, meaning: 'Immutable identifier of the principal; safe for authorisation checks.'}
+  - {claim: upn, meaning: 'Principal identity as an email address; may change over the lifetime of the individual.'}
+  - {claim: amr, meaning: 'Authentication methods used; presence of "mfa" means multi-factor authentication took place.'}
+  - {claim: aud, meaning: 'Audience; must match the endpoint URI up to but not including the version.'}
+  - {claim: iss, meaning: 'Issuer; must match the gateway URI for the environment, e.g. https://sand-api.londonmarketgroup.co.uk/ in Sandbox.'}
+  additional: [appid, given_name, idp, iat, family_name, unique_name, oid, nbf, exp, lmg_mpo, lmg_cert_dn, lmg_pkt]
+  ttl_rule: >-
+    Any token issued by the API Gateway must not have a TTL longer than the token that called it;
+    nbf is set to now and exp to the expiry of the original token.
+authorization:
+  model: >-
+    The API Gateway may perform high-level authorisation but should not perform low-level
+    role-based authorisation; API Providers may use any JWT claim for authorisation. Failure at
+    either enforcement step returns 401 with a message indicating which PEP step failed.
+  errors: [ResourceAccessDenied, AccessToReferencedResourceNotAllowed, NotDocumentOwner]
+onboarding:
+  self_serve: false
+  steps:
+  - Onboard the organisation to LIMOSS Common Services / the LIMOSS API Gateway ("Subscribe to PPL API").
+  - Guest the account identity into each Common Services environment separately (Sandbox, PreProd, Production).
+  - Register the application in the Common Services Azure Active Directory (CS Developers On-Boarding Guide v1.1).
+  - Register an X.509 certificate in each API Gateway environment (a different certificate per environment).
+  - For Sandbox/PreProd test data, request test-harness setup from the Lloyd's API Factory.
+  contacts:
+  - {purpose: API Factory - licences, test harnesses, API standards, design issues, email: developer@lloyds.com}
+  - {purpose: Placing API adoption on the PPL platform, email: PPLEnquiries@lloyds.com}
+  - {purpose: LIMOSS onboarding and SLA, url: 'https://limoss.london/'}
+transport_security:
+  https_only: true
+  mutual_tls: true
+  gateway_certificate: Extended Validation certificate signed by a Microsoft Trusted Root CA
+  observed_tls: TLSv1.2 (api.londonmarketgroup.co.uk, probed 2026-07-25)
+related:
+- scopes/lloyds-of-london-scopes.yml
+- well-known/lloyds-of-london-well-known.yml
+- conventions/lloyds-of-london-conventions.yml
+- sandbox/lloyds-of-london-sandbox.yml

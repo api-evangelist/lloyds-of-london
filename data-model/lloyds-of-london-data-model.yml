@@ -1,0 +1,151 @@
+generated: '2026-07-25'
+method: derived
+source: >-
+  examples/ (22 payload examples published by Lloyd's) plus the resource list on
+  https://web.archive.org/web/20210128061829/https://developer.lloyds.com/placingsubmissionandquote-v1/Key-Details-On-API
+description: >-
+  Entity-relationship graph for the Lloyd's market APIs, derived from the payload examples Lloyd's
+  published and the resource list in the Placing API v1.10 release notes. No OpenAPI is reachable,
+  so relationships are read from id-reference fields in real published payloads rather than from
+  schema $refs. Every entity, field and relationship below appears in a Lloyd's-published document
+  - nothing is inferred beyond the field linkage the payloads make explicit.
+identity_convention:
+  pseudo_field: id
+  rule: >-
+    Composite natural business keys concatenated with underscores; internal persistence keys are
+    never exposed. Business keys are preferred over surrogates wherever one exists.
+  patterns:
+  - {entity: Submission, pattern: '{submissionReference}_{submissionVersionNumber}', example: B1234AB12345_2}
+  - {entity: SubmissionDocument, pattern: '{submissionReference}_{submissionVersionNumber}_{documentId}', example: B432198765_1_B_00001}
+  - {entity: SubmissionUnderwriter, pattern: '{submissionReference}_{submissionVersionNumber}_{submissionUnderwriterId}', example: B1234AB12321_1_B11111}
+  - {entity: SubmissionDialogue, pattern: '{submissionReference}_{submissionVersionNumber}_{submissionDialogueId}', example: B1234AB12321_1_RQ10002}
+  - {entity: CatastropheCode, pattern: '{Code}', example: 17E}
+  reference_rules:
+  - Contract Reference must begin with "B" followed by the Broker Code (error InvalidContractReference).
+  - Submission Reference must begin with "B" followed by the Broker Code (error InvalidSubmissionReference).
+  - The first five characters of Programme Reference and Submission Reference must match
+    (error ProgrammeReferenceAndSubmissionReferenceMismatch).
+  id_prefixes:
+  - {prefix: 'B_', meaning: 'document supplied by the Broker', field: documentId}
+  - {prefix: 'U_', meaning: 'document supplied by the Underwriter', field: documentId}
+  - {prefix: 'RQ', meaning: 'submission dialogue (request/response) identifier', field: submissionDialogueId}
+entities:
+- name: BrokerDepartment
+  api: "Lloyd's Placing API - Submission and Quote v1"
+  collection: /BrokerDepartments
+  key: brokerDepartmentId
+  fields: [brokerDepartmentId, brokerDepartmentName, brokerCodes, brokerUsers]
+  description: A broking firm's department, the codes it may place under, and its users.
+- name: Submission
+  api: "Lloyd's Placing API - Submission and Quote v1"
+  collection: /Submissions
+  key: submissionReference + submissionVersionNumber
+  fields: [submissionReference, submissionVersionNumber, submissionVersionDescription, submissionStatusCode,
+    technicianUserEmailAddress, createdDateTime, brokerDepartmentId, brokerUserEmailAddress, brokerCode,
+    programmeId, programmeReference, programmeDescription, contractReference, contractDescription,
+    contractTypeCode, insuredOrReinsured, originalPolicyholder, coverTypeCode, classOfBusinessCode,
+    riskRegionCode, riskCountryCode, periodOfCover]
+  description: >-
+    A versioned risk submission from a broker into the market. Versions are immutable-by-convention -
+    a long list of *MismatchPreviousSubmissionVersion errors enforces that broker code, risk region,
+    contract type, cover type, insured/reinsured, period of cover, risk country, original
+    policyholder, broker department and class of business cannot change between versions.
+  enums_observed:
+    submissionStatusCode: [DRFT]
+    contractTypeCode: [reinsurance_contract]
+    coverTypeCode: [facultative_proportional]
+    classOfBusinessCode: [property_unspecified]
+    riskRegionCode: [worldwide]
+  structures:
+  - name: periodOfCover
+    variants: [insurancePeriod (inceptionDate, expiryDate), insuranceDuration (durationNumber, durationUnit)]
+    rule: >-
+      Exactly one of the two must be populated (error EitherBothPeriodAndDurationPopulatedOrNonePopulated);
+      likewise exactly one of riskRegionCode / riskCountryCode
+      (error EitherRiskRegionCodeOrRiskCountryCodesMustBePopulated).
+- name: SubmissionDocument
+  api: "Lloyd's Placing API - Submission and Quote v1"
+  collection: /SubmissionDocuments
+  key: submissionReference + submissionVersionNumber + documentId
+  fields: [submissionReference, submissionVersionNumber, documentId, fileName, fileMIMEType,
+    fileSizeInBytes, documentType, documentDescription, shareableToAllMarketsFlag, suppliedBy,
+    replacingDocumentId, createdDateTime]
+  sub_resource: /content (binary file content, multipart MIME on write)
+  constraints:
+  - Files up to 50MB must be permitted (error DocumentExceedsFileSize).
+  - Antivirus scanning is mandatory; on failure neither the resource nor the content may be stored.
+  - An uploaded Market Reform Contract / Placing Slip cannot be updated, only replaced
+    (errors MRCCannotBeUpdated, MRCCannotBeAddedAsNew).
+  enums_observed:
+    documentType: [document_placing_slip, other_documentation]
+    suppliedBy: [B, U]
+- name: UnderwriterOrganisation
+  api: "Lloyd's Placing API - Submission and Quote v1"
+  collection: /UnderwriterOrganisations
+  key: underwriterOrganisationId
+  fields: [underwriterOrganisationId, underwriterOrganisationName, underwriterUsers, brokerDepartmentId]
+  description: Carrier (market) organisations and their underwriter users, scoped to a broker department.
+- name: SubmissionUnderwriter
+  api: "Lloyd's Placing API - Submission and Quote v1"
+  collection: /SubmissionUnderwriters
+  key: submissionReference + submissionVersionNumber + submissionUnderwriterId
+  fields: [submissionReference, submissionVersionNumber, submissionUnderwriterId,
+    submissionUnderwriterStatusCode, underwriterOrganisationId, underwriterUserEmailAddress,
+    communicationsMethodCode, brokerOrganisationName, brokerDepartmentName, brokerUserFullName,
+    createdDateTime]
+  description: The join of a Submission version to a specific carrier/underwriter invited onto it.
+  enums_observed:
+    communicationsMethodCode: [PLATFORM]
+    submissionUnderwriterStatusCode: [DRFT]
+- name: SubmissionDialogue
+  api: "Lloyd's Placing API - Submission and Quote v1"
+  collection: /SubmissionDialogues
+  key: submissionReference + submissionVersionNumber + submissionDialogueId
+  fields: [submissionReference, submissionVersionNumber, submissionDialogueId, submissionUnderwriterId,
+    senderParticipantCode, senderUserFullName, senderUserEmailAddress, isDraftFlag, statusCode,
+    senderActionCode, senderNote, senderDocumentIds, underwriterQuoteReference,
+    underwriterQuoteValidUntilDate, createdDateTime, sentDateTime]
+  description: >-
+    The message exchange between broker and underwriter on a submission - the QUOTE verb of the
+    placement lifecycle. Broker sends RFQ; the underwriter responds with reject, express interest,
+    request for information, or quote.
+  enums_observed:
+    senderActionCode: [RFQ, QUOTE]
+    senderParticipantCode: [B, U]
+    statusCode: [DELV, SENT]
+- name: CatastropheCode
+  api: "Lloyd's Catastrophe Codes API v1"
+  collection: /CatastropheCodes
+  key: Code
+  fields: [Code, Definition, EventStartDate, EventEndDate, EventYear]
+  description: >-
+    Lloyd's catastrophe event reference data - the market's canonical codes for aggregating losses
+    to a named catastrophe. The only Lloyd's API surface still routed on the gateway.
+  example_values:
+  - {Code: 17B, Definition: 'Tornadoes in South-Eastern United States, 7 February 2017'}
+  - {Code: 17D, Definition: 'Tropical Cyclone Debbie from 27-28 March 2017'}
+  - {Code: 17E, Definition: 'Typhoon Hato, 20 August 2017 and ongoing, affecting Hong Kong, Macau and South China'}
+relationships:
+- {from: BrokerDepartment, to: Submission, type: has_many, via: brokerDepartmentId}
+- {from: Submission, to: BrokerDepartment, type: belongs_to, via: brokerDepartmentId}
+- {from: Submission, to: SubmissionDocument, type: has_many, via: submissionReference + submissionVersionNumber}
+- {from: Submission, to: SubmissionUnderwriter, type: has_many, via: submissionReference + submissionVersionNumber}
+- {from: SubmissionDocument, to: Submission, type: belongs_to, via: submissionReference + submissionVersionNumber}
+- {from: SubmissionDocument, to: SubmissionDocument, type: has_one, via: replacingDocumentId, note: 'a replacing document must reference an earlier version of the same submission'}
+- {from: SubmissionUnderwriter, to: Submission, type: belongs_to, via: submissionReference + submissionVersionNumber}
+- {from: SubmissionUnderwriter, to: UnderwriterOrganisation, type: belongs_to, via: underwriterOrganisationId}
+- {from: UnderwriterOrganisation, to: SubmissionUnderwriter, type: has_many, via: underwriterOrganisationId}
+- {from: SubmissionUnderwriter, to: SubmissionDialogue, type: has_many, via: submissionUnderwriterId}
+- {from: SubmissionDialogue, to: SubmissionUnderwriter, type: belongs_to, via: submissionUnderwriterId}
+- {from: SubmissionDialogue, to: SubmissionDocument, type: has_many, via: senderDocumentIds, note: 'referenced documents must be linked to the submission and not already used in an earlier dialogue'}
+- {from: Submission, to: Submission, type: has_many, via: submissionVersionNumber, note: 'version chain under a single submissionReference'}
+resource_scope:
+  note: >-
+    The Base API Standard defines a "resource scope" boundary within which referential integrity
+    must hold and across which links are only loosely associated. Expansion (_expand) is only
+    permitted between resources inside the same scope and the same endpoint design. The Placing
+    entities above sit in one endpoint scope; CatastropheCodes is a separate endpoint.
+related:
+- examples/_index.yml
+- conventions/lloyds-of-london-conventions.yml
+- errors/lloyds-of-london-error-codes.yml

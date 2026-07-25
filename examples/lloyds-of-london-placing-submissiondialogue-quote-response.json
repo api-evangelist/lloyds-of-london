@@ -1,0 +1,27 @@
+{
+  "id": "B1234AB12321_1_RQ10002",
+  "submissionReference": "B1234AB12321",
+  "submissionVersionNumber": 1,
+  "submissionDialogueId": "RQ10002",
+  "submissionUnderwriterId": "B11111",
+  "senderParticipantCode": "U",
+  "senderUserFullName": "A N Underwriter",
+  "senderUserEmailAddress": "A.N.Underwriter@UnderwritingFirm1.com",
+  "isDraftFlag": true,
+  "statusCode": "SENT",
+  "senderActionCode": "QUOTE",
+  "senderNote": "Thank you, here is my Quoteslip, attached. Regards, U.",
+  "senderDocumentIds": [
+    "U_10001"
+  ],
+  "underwriterQuoteReference": "PPQuote1",
+  "underwriterQuoteValidUntilDate": "2021-01-15",
+  "createdDateTime": "2020-01-01T11:52:33+00:00",
+  "sentDateTime": null,
+  "_links": [
+    {
+      "rel": "canonical",
+      "href": "https://api.londonmarketgroup.co.uk/Lloyds/Placing/V1/SubmissionDialogues/B1234AB12321_1_RQ10002"
+    }
+  ]
+}

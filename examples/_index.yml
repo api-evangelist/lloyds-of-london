@@ -1,0 +1,147 @@
+generated: '2026-07-25'
+method: searched
+source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+description: Request and response examples published verbatim by Lloyd's on the Placing API Technical
+  Model page and in the appendices of the Lloyd's Base API Standard, harvested from Internet Archive captures
+  before the developer portal was retired. These are the only machine-readable payload artifacts Lloyd's
+  ever published for its market APIs - the referenced Swagger/OpenAPI 3.0 file was never archived and
+  its host no longer resolves - so they carry the concrete shape of the collection envelope, the identity
+  pseudo-field, the error document, and every Placing resource.
+count: 22
+examples:
+- name: Identity pseudo-field document
+  api: Base API Standard
+  kind: response
+  operation: (appendix) Identity
+  source: https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+  file: lloyds-of-london-identity-document.json
+- name: CatastropheCodes singleton resource
+  api: Lloyd's Catastrophe Codes API v1
+  kind: response
+  operation: GET /Lloyds/CatastropheCodes/v1/CatastropheCodes/{code}
+  source: https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+  file: lloyds-of-london-catastrophecodes-singleton.json
+- name: CatastropheCodes collection wrapper
+  api: Lloyd's Catastrophe Codes API v1
+  kind: response
+  operation: GET /Lloyds/CatastropheCodes/v1/CatastropheCodes?Code=17B,17D&_pageSize=200&_pageNum=1
+  source: https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+  file: lloyds-of-london-catastrophecodes-collection.json
+- name: Version meta resource document
+  api: Base API Standard
+  kind: response
+  operation: GET {endpoint}/version
+  source: https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+  file: lloyds-of-london-version-document.json
+- name: Error document
+  api: Base API Standard
+  kind: error
+  operation: (any 4XX/5XX)
+  source: https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+  file: lloyds-of-london-error-document.json
+- name: Submission collection wrapper
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: response
+  operation: GET /Lloyds/Placing/v1/Submissions
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submission-collection.json
+- name: Submission singleton
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: response
+  operation: GET /Lloyds/Placing/v1/Submissions/{id}
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submission-get.json
+- name: BrokerDepartment collection wrapper
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: response
+  operation: GET /Lloyds/Placing/v1/BrokerDepartments
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-brokerdepartment-collection.json
+- name: Create Submission request
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: request
+  operation: POST /Lloyds/Placing/V1/Submissions
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submission-post-request.json
+- name: Create Submission response
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: response
+  operation: POST /Lloyds/Placing/V1/Submissions
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submission-post-response.json
+- name: Update Submission request
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: request
+  operation: PUT /Lloyds/Placing/v1/Submissions/{id}
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submission-put-request.json
+- name: Update Submission response
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: response
+  operation: PUT /Lloyds/Placing/v1/Submissions/{id}
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submission-put-response.json
+- name: Upload SubmissionDocument metadata part
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: request
+  operation: POST /Lloyds/Placing/v1/SubmissionDocuments
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submissiondocument-post-request.json
+- name: Upload SubmissionDocument response
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: response
+  operation: POST /Lloyds/Placing/v1/SubmissionDocuments
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submissiondocument-post-response.json
+- name: SubmissionDocument collection wrapper
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: response
+  operation: GET /Lloyds/Placing/v1/SubmissionDocuments?SubmissionReference={ref}
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submissiondocument-collection.json
+- name: UnderwriterOrganisation collection wrapper
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: response
+  operation: GET /Lloyds/Placing/V1/UnderwriterOrganisations
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-underwriterorganisation-collection.json
+- name: Add SubmissionUnderwriter request
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: request
+  operation: POST /Lloyds/Placing/V1/SubmissionUnderwriters
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submissionunderwriter-post-request.json
+- name: Add SubmissionUnderwriter response
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: response
+  operation: POST /Lloyds/Placing/V1/SubmissionUnderwriters
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submissionunderwriter-post-response.json
+- name: Broker Request For Quote request
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: request
+  operation: POST /Lloyds/Placing/V1/SubmissionDialogues
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submissiondialogue-rfq-request.json
+- name: Broker Request For Quote response
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: response
+  operation: POST /Lloyds/Placing/V1/SubmissionDialogues
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submissiondialogue-rfq-response.json
+- name: Underwriter Quote response request
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: request
+  operation: POST /Lloyds/Placing/V1/SubmissionDialogues
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submissiondialogue-quote-request.json
+- name: Underwriter Quote response
+  api: Lloyd's Placing API - Submission and Quote v1
+  kind: response
+  operation: POST /Lloyds/Placing/V1/SubmissionDialogues
+  source: https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+  file: lloyds-of-london-placing-submissiondialogue-quote-response.json
+related:
+- conventions/lloyds-of-london-conventions.yml
+- data-model/lloyds-of-london-data-model.yml
+- errors/lloyds-of-london-error-codes.yml

@@ -1,0 +1,25 @@
+{
+  "submissionReference": "B1234AB12345",
+  "submissionVersionDescription": "Submission Version 3",
+  "brokerDepartmentId": "1",
+  "brokerUserEmailAddress": "A.N.Broker@BrokerFirm.com",
+  "brokerCode": "1234",
+  "programmeReference": "B1234PP",
+  "programmeDescription": "2020 Property Programme",
+  "contractReference": "",
+  "contractDescription": "",
+  "contractTypeCode": "reinsurance_contract",
+  "insuredOrReinsured": "PP Property Managers",
+  "originalPolicyholder": "",
+  "coverTypeCode": "facultative_proportional",
+  "techinicianUserEmailAddress": "A.N.Technician@BrokerFirm.com",
+  "classOfBusinessCode": "property_unspecified",
+  "riskRegionCode": "worldwide",
+  "riskCountryCode": null,
+  "periodOfCover": {
+    "insurancePeriod": {
+      "inceptionDate": "2020-01-01",
+      "expiryDate": "2020-12-31"
+    }
+  }
+}

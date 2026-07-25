@@ -1,0 +1,27 @@
+{
+  "total": 2,
+  "_links": [
+    {
+      "rel": "canonical",
+      "href": "https://sand-api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1/CatastropheCodes?Code=17B,17D&_pageSize=200&_pageNum=1"
+    }
+  ],
+  "items": [
+    {
+      "id": "17B",
+      "Code": "17B",
+      "Definition": "Tornadoes in South-Eastern United States, 7 February 2017",
+      "EventStartDate": "2017-02-07",
+      "EventEndDate": "2017-02-07",
+      "EventYear": 2017
+    },
+    {
+      "id": "17D",
+      "Code": "17D",
+      "Definition": "Tropical Cyclone Debbie from 27-28 March 2017. Debbie was downgraded to tropical low late on 28 March 2017 and the weather system continued to spread from QLD into NSW.",
+      "EventStartDate": "2017-03-27",
+      "EventEndDate": "2017-03-28",
+      "EventYear": 2017
+    }
+  ]
+}

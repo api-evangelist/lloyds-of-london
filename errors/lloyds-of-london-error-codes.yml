@@ -1,0 +1,372 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+docs:
+- https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+- https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+format: proprietary
+rfc9457: false
+description: >-
+  Lloyd's does not use RFC 9457 problem+json. The Base API Standard defines a single common
+  error document returned from any GET, PUT or POST that results in a 4XX or 5XX, and the
+  Placing API published a named error-code registry on top of it. This is the non-payments
+  equivalent of a decline-code reference: 107 named, human-readable validation and
+  business-rule codes covering field validation, referential integrity, submission-version
+  consistency, document handling and delegated authorisation. Captured verbatim from the
+  Lloyd's Placing API Technical Model before the developer portal was retired.
+envelope:
+  media_type: application/json
+  shape: '{"Message": "<human readable>", "Code": <http status>}'
+  fields:
+  - {name: Message, type: string, description: human-readable error message; not intended for end-user display}
+  - {name: Code, type: integer, description: HTTP status code repeated in the body}
+  gateway_example: '{"Code": 401, "Message": "Client certificate is missing. Ref: b2fc01e9-b7f9-49b1-8f5d-f6fd7ab70b92"}'
+  gateway_example_404: '{"Code": 404, "Message": "API operations not found. Ref: <uuid>"}'
+  observed: live probe of https://api.londonmarketgroup.co.uk and https://sand-api.londonmarketgroup.co.uk on 2026-07-25
+rules:
+- The error document must be machine readable but carry a human-readable message.
+- It must not expose internal implementation detail such as stack traces.
+- It may carry correlation or transaction identifiers that locate the log entry in the provider (the gateway emits 'Ref: <uuid>').
+- It should not echo the whole request payload.
+- Providers are required to log details of every request that results in a 4XX.
+- Error messages are for operations and development triage - the APIs are service-to-service, not browser-to-service.
+status_mapping:
+- {case: "The request URI does not map to a known resource", response: "4XX (must)"}
+- {case: "The request URI contains invalid parameters", response: "4XX (must)"}
+- {case: "The request payload fails schema validation", response: "4XX (must)"}
+- {case: "The request payload is incompatible with application invariants", response: "4XX (must)"}
+- {case: "The request payload is incompatible with application state", response: "4XX (must)"}
+- {case: "Payload plus application state exposes an application bug", response: "5XX (should), 4XX (may)"}
+- {case: "A backend dependency has failed", response: "5XX (must)"}
+- {case: "The backend service is unavailable and not responding", response: "5XX from the API gateway (must)"}
+- {case: "An unsupported _order, _select or filter feature was requested", response: "501 (must)"}
+known_issues:
+- {code: StringTooShort, issue: 'The published description is incomplete - it does not state the minimum number of characters required.'}
+- {code: StringTooLong, issue: 'The published description is incomplete - it does not state the maximum number of characters permitted.'}
+error_code_count: 107
+error_codes:
+- code: FieldIsEmpty
+  category: request-validation
+  description: "The field was empty when a value is required e.g. \"\"."
+- code: ContainsWhitespace
+  category: request-validation
+  description: "The field contains whitespace."
+- code: ContainsSpecialChar
+  category: request-validation
+  description: "The field contains special characters."
+- code: ContainsCurlies
+  category: request-validation
+  description: "The field contains curly brackets."
+- code: InvalidEmailFormat
+  category: request-validation
+  description: "The field should contain a valid email address."
+- code: InvalidDateFormat
+  category: request-validation
+  description: "The field should contain a valid date in the correct format."
+- code: InvalidTeleNoFormat
+  category: request-validation
+  description: "The field should contain a valid telephone number in the correct format."
+- code: InvalidNumber
+  category: request-validation
+  description: "The field should contain a valid number."
+- code: InvalidCountryFormat
+  category: request-validation
+  description: "The field should contain a valid country format."
+- code: MaximumDateRangeExceeded
+  category: request-validation
+  description: "The field should contain a date no greater than:"
+- code: NumberTooLarge
+  category: request-validation
+  description: "The field should contain a valid number."
+- code: InvalidFilename
+  category: request-validation
+  description: "The File Name is not valid."
+- code: InvalidMIMETypeFormat
+  category: request-validation
+  description: "The MIME Type should be in the correct format."
+- code: InvalidBrokerCode
+  category: business-rule
+  description: "The field contains an invalid Broker Code for the selected Broker Department."
+- code: InvalidContractReference
+  category: business-rule
+  description: "The Contract Reference should begin with a single character \"B\", followed by the Broker Code."
+- code: InvalidSubmissionReference
+  category: business-rule
+  description: "The Submission Reference should begin with a single character \"B\", followed by the Broker Code."
+- code: MissingField
+  category: request-validation
+  description: "The field should not be blank."
+- code: SubmissionNotInDraft
+  category: business-state
+  description: "The status of the Submission is not in Draft."
+- code: InvalidCharacters
+  category: request-validation
+  description: "The field contains characters that were not from the defined character set."
+- code: ValueTooLarge
+  category: request-validation
+  description: "The value of this field is too large."
+- code: ResourceAccessDenied
+  category: authorization
+  description: "The requester is denied access to the resource."
+- code: PeriodExpiryDateisNotGreaterOrEqualPeriodInceptionDate
+  category: business-rule
+  description: "The Expiry Date is before the Inception Date."
+- code: SubmissionInPayloadDoesNotExist
+  category: referential-integrity
+  description: "The Submission referenced in the payload does not exist."
+- code: UnderwriterOrganisationAlreadyExists
+  category: referential-integrity
+  description: "The Underwriter Organisation already exists for this combination of Submission Reference and Submission Version Number."
+- code: UnderwriterNotAuthorisedToQuote
+  category: authorization
+  description: "The Underwriter is not authorised to provide a quote."
+- code: UnderwriterEmailDoesNotExist
+  category: referential-integrity
+  description: "The Underwriter e-mail address does not exist for the Underwriter Organisation."
+- code: CommunicationMethodCodePlatformExpected
+  category: business-state
+  description: "The Communication Method Code must be set to PLATFORM."
+- code: ResourceDoesNotExist
+  category: referential-integrity
+  description: "The Identifier of the Resource does not exist."
+- code: SubmissionUnderwriterNotInDraft
+  category: business-state
+  description: "The SubmissionUnderwriter status is not Draft."
+- code: SubmissionUnderwriterDoesNotExist
+  category: referential-integrity
+  description: "The referenced SubmissionUnderwriter does not exist."
+- code: DraftSubmissionNotExpected
+  category: business-state
+  description: "This request cannot be set as draft."
+- code: InvalidBrokerActionCode
+  category: business-rule
+  description: "The Broker action code is invalid."
+- code: SenderNoteMandatory
+  category: business-rule
+  description: "The Sender Note is mandatory."
+- code: SubmissionDocumentDoesNotExist
+  category: referential-integrity
+  description: "No Submission Document / Placing Slip has been referenced."
+- code: SupportingDocumentDoesNotExist
+  category: referential-integrity
+  description: "The referenced supporting document(s) does not exist."
+- code: NULLValueExpected
+  category: request-validation
+  description: "A NULL value is expected."
+- code: UnderwriterQuoteValidUntilDateNotExpected
+  category: business-state
+  description: "The UnderwriterQuoteValidUntilDate field is not expected in this request."
+- code: BrokerRequestForQuoteAlreadyExists
+  category: referential-integrity
+  description: "A quotation request has already been sent to this underwriter."
+- code: UnderwriterOrganisationDoesNotExist
+  category: referential-integrity
+  description: "The Underwriter Organisation referenced does not exist."
+- code: BrokerCodeDepartmentMismatch
+  category: version-consistency
+  description: "The Broker Code does not exist for Broker Department."
+- code: BrokerNotMemberOfDepartment
+  category: business-rule
+  description: "The Broker User is not a member of the Broker Department."
+- code: EitherRiskRegionCodeOrRiskCountryCodesMustBePopulated
+  category: business-rule
+  description: "Either the Region or the Country Code is populated. Both must not be populated. Both must not be blank."
+- code: EitherBothPeriodAndDurationPopulatedOrNonePopulated
+  category: business-rule
+  description: "Either the Insurance Period or Insurance Duration data structures must be populated."
+- code: AccessToReferencedResourceNotAllowed
+  category: authorization
+  description: "The requester is not allowed to access to other resource(s) referenced in this request."
+- code: UnderwriterQuoteReferenceNotExpected
+  category: business-state
+  description: "The UnderwriterQuoteReference field is not expected in this request."
+- code: SubmissionDocumentNotLinkedToSubmission
+  category: document-handling
+  description: "The referenced Submission Document record is not related to the Submission."
+- code: SupportingDocumentNotLinkedToSubmission
+  category: document-handling
+  description: "The referenced supporting document(s) is not related to the Submission record."
+- code: RequestForQuoteDoesNotExist
+  category: referential-integrity
+  description: "There is no Request For Quote (RFQ) dialogue for this SubmissionUnderwriter."
+- code: SubmissionDialogueInDraftStatusExists
+  category: business-state
+  description: "A SubmissionDialogue with a StatusCode of Draft already exists for this SubmissionUnderwriter."
+- code: InvalidUnderwriterActionCode
+  category: business-rule
+  description: "The Underwriter action code is invalid."
+- code: UnderwriterQuoteReferenceExpected
+  category: business-state
+  description: "The UnderwriterQuoteReference field is expected in this request."
+- code: UnderwriterQuoteValidUntilDateExpected
+  category: business-state
+  description: "The UnderwriterQuoteValidUntilDate field is expected in this request."
+- code: DocumentDoesNotExist
+  category: referential-integrity
+  description: "The DocumentId referenced does not exist in SubmissionDocument."
+- code: DocumentsNotLinkedToSubmissionUnderwriter
+  category: document-handling
+  description: "The DocumentId referenced is not linked to the SubmissionUnderwriter."
+- code: SenderDocumentIdsNotExpected
+  category: document-handling
+  description: "Document references are not expected within this request."
+- code: SubmissionDialogueNotInDraft
+  category: business-state
+  description: "The SubmisisonDialogue StatusCode is not in draft."
+- code: MethodNotAvailable
+  category: business-rule
+  description: "The method for this resource is not available."
+- code: NotDocumentOwner
+  category: authorization
+  description: "The requester is not from the organisation that owns the submission document."
+- code: ResourceKeysDoNotMatch
+  category: version-consistency
+  description: "The resource keys that form the resource identifier do not match the resource keys within the body of the resource."
+- code: FileExtensionNotSupportedForSupportingDocument
+  category: document-handling
+  description: "The file extension is not supported for the document type."
+- code: ShareableToAllMarketsFlagExpectedTrue
+  category: business-state
+  description: "The ShareableToAllMarketsFlag must be set to true."
+- code: DocumentExceedsFileSize
+  category: document-handling
+  description: "The document file size field and binary file size must not exceed 50 megabytes."
+- code: ReplacingDocumentIdNotExpected
+  category: document-handling
+  description: "The ReplacingDocumentId must not be populated."
+- code: MRCCannotBeUpdated
+  category: document-handling
+  description: "An uploaded Submission Document / Placing Slip cannot be updated."
+- code: FileExtensionNotSupportedForMRC
+  category: document-handling
+  description: "The file extension is not supported for the document type."
+- code: MRCCannotBeAddedAsNew
+  category: document-handling
+  description: "The Submission Document / Placing Slip must reference the original document it is replacing."
+- code: ShareableToAllMarketsFlagExpectedFalse
+  category: business-state
+  description: "The ShareableToAllMarketsFlag must be false."
+- code: ReplacingDocumentDoesNotExist
+  category: referential-integrity
+  description: "The SubmissionDocument record referenced in the ReplacingDocumentId field does not exist."
+- code: ReplacingDocumentSubmissionVersionMismatch
+  category: version-consistency
+  description: "The submission reference and submission version number of the SubmissionDocument payload and the SubmissionDocument record referenced in the ReplacingDocumentId field does not match."
+- code: ReplacingDocumentDocumentTypeMismatch
+  category: version-consistency
+  description: "The document type of the replacing SubmissionDocument record does not match with the document type of the SubmissionDocument payload."
+- code: BrokerCodeMismatchPreviousSubmissionVersion
+  category: version-consistency
+  description: "The Broker Code does not match the Broker Code from a previous Submission version."
+- code: RiskRegionCodeMismatchPreviousSubmissionVersion
+  category: version-consistency
+  description: "The Risk Region Code does not match the Region Code from a previous Submission version."
+- code: ContractTypeMismatchPreviousSubmissionVersion
+  category: version-consistency
+  description: "The Contract Type does not match the Contract Type from a previous Submission version."
+- code: CoverTypeMismatchPreviousSubmissionVersion
+  category: version-consistency
+  description: "The Cover Type does not match the Cover Type from a previous Submission version."
+- code: InsuredOrReinsuredMismatchPreviousSubmissionVersion
+  category: version-consistency
+  description: "The Insured Or Reinsured value does not match the Insured Or Reinsured value from a previous Submission version."
+- code: PeriodOfCoverMismatchPreviousSubmissionVersion
+  category: version-consistency
+  description: "The Period of Cover does not match the Period of Cover from a previous Submission version."
+- code: RiskCountryCodeMismatchPreviousSubmissionVersion
+  category: version-consistency
+  description: "The Risk Country Code does not match the Country Code from a previous Submission version."
+- code: MinimumDateRangeExceeded
+  category: request-validation
+  description: "The field should contain a date no smaller than:"
+- code: BinaryFileSizeMismatch
+  category: version-consistency
+  description: "The file size of the binary file and the document file size field do not match."
+- code: InvalidFirstCharacter
+  category: request-validation
+  description: "The first character of the string is invalid."
+- code: ProgrammeReferenceAndSubmissionReferenceMismatch
+  category: version-consistency
+  description: "First five characters of Programme Reference and Submission Reference must be the same."
+- code: DateInThePast
+  category: request-validation
+  description: "The date has been set in the past."
+- code: DocumentUsedInSubmissionDialogue
+  category: document-handling
+  description: "The document has already been referenced in a previous SubmissionDialogue."
+- code: DocumentLinkedUsedAlready
+  category: document-handling
+  description: "The referenced document has been used already."
+- code: DocumentLinkedMRCRepeated
+  category: document-handling
+  description: "More than one Placing Slip / MRC contract has been referenced."
+- code: OriginalPolicyholderMismatchPreviousSubmissionVersion
+  category: version-consistency
+  description: "The Original Policyholder does not match the Original Policyholder from a previous Submission version."
+- code: OriginalPolicyholderNotExpected
+  category: business-state
+  description: "The OriginalPolicyholder field must be blank for direct insurance contract types."
+- code: DocumentsLinkedReplacementsRepeated
+  category: document-handling
+  description: "The documents referenced on the Submission or in the SubmissionDialogue reference to the same replacing document more than once."
+- code: BrokerCodeNotInTheCodesListforRelevantDepartment
+  category: business-rule
+  description: "Broker Code cannot be found in the list of Broker Codes for the Broker Department."
+- code: BrokerDepartmentDoesNotExist
+  category: referential-integrity
+  description: "The Broker Department does not exist."
+- code: ClassOfBusinessCodeNotSupported
+  category: business-state
+  description: "The Class Of Business Code is not supported."
+- code: BrokerDepartmentMismatchPreviousSubmissionVersion
+  category: version-consistency
+  description: "The Broker Department does not match the Broker Department from a previous Submission version."
+- code: ClassOfBusinessMismatchPreviousSubmissionVersion
+  category: version-consistency
+  description: "The Class of Business does not match the Class of Business from a previous Submission version."
+- code: BrokerCodeMismatch
+  category: version-consistency
+  description: "The Broker Code does not match the Broker Code in the record."
+- code: StringTooLong
+  category: request-validation
+  description: "String Too Long. String must be no longer than:"
+- code: StringTooShort
+  category: request-validation
+  description: "String Too Short. String must be no shorter than:"
+- code: SubmissionDocumentInherited
+  category: document-handling
+  description: "The inherited SubmissionDocument record is referenced on a non-draft version of a Submission record."
+- code: SectionedSubmissionNotSupported
+  category: business-state
+  description: "The referenced Submission has sections and is not currently supported."
+- code: PanelOrFacilityOnSubmissionNotSupported
+  category: business-state
+  description: "The referenced Submission has associated panel or facility underwriters that is not currently supported."
+- code: ReplacingDocumentNotSuppliedByBroker
+  category: document-handling
+  description: "The supplier of the replacing SubmissionDocument record does not belong to a Broker."
+- code: DocumentTypeNotSupportingDocument
+  category: document-handling
+  description: "The document type is not for a Supporting Document."
+- code: ReplacingDocumentLinkNotInEarlierSubmission
+  category: document-handling
+  description: "The document referenced in the ReplacingDocumentId field is not from an earlier version of the same Submission."
+- code: ReplacingDocumentOnPrimarySubmissionVersion
+  category: document-handling
+  description: "A replacing document cannot be referenced for the first version of a submission reference."
+- code: MissingRequiredHTTPHeader
+  category: request-validation
+  description: "A request was received that did not include a required HTTP request header."
+- code: InvalidFilterCriterion
+  category: request-validation
+  description: "There are filter-able fields or filter criterion that are invalid within the resource request."
+- code: InvalidOrderCriterion
+  category: request-validation
+  description: "There are invalid order-able fields or invalid order-able field directions within the resource request."
+- code: MandatoryFilterMissing
+  category: request-validation
+  description: "A request for this resource requires all mandatory filters to be supplied when performing a collection get."
+related:
+- conventions/lloyds-of-london-conventions.yml
+- data-model/lloyds-of-london-data-model.yml

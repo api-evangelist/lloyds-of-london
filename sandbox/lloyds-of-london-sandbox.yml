@@ -1,0 +1,86 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  https://web.archive.org/web/20200930075931/https://developer.lloyds.com/Get-Started/Registration-Onboarding
+  and section 5.13 Environments of the Lloyd's Base API Standard
+docs:
+- https://web.archive.org/web/20200930075931/https://developer.lloyds.com/Get-Started/Registration-Onboarding
+- https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+description: >-
+  Lloyd's runs a real three-environment estate on the London Market API Gateway - Sandbox,
+  PreProd and Production - each with its own DNS prefix, its own Azure AD tenant, its own X.509
+  certificate registration and its own JWT issuer value. The Sandbox gateway is live and answering
+  today. What Lloyd's does NOT provide is self-serve access: there are no test API keys, no
+  published test credentials and no magic test values. An organisation must be onboarded to LIMOSS
+  Common Services and guested into each environment separately, and test data (test broker and
+  underwriter organisations) is provisioned by request from the Lloyd's API Factory. Nothing here
+  is invented - no published test values exist to record.
+self_serve: false
+test_credentials_published: false
+environments:
+- name: Sandbox
+  host: https://sand-api.londonmarketgroup.co.uk
+  uri_pattern: https://sand-api.londonmarketgroup.co.uk/{capability}/{facility}/{versionNo}/{Resource}
+  jwt_issuer: https://sand-api.londonmarketgroup.co.uk/
+  oidc_discovery: https://sand-api.londonmarketgroup.co.uk/discovery/.well-known/openid-configuration
+  live_probe: '2026-07-25 - /Lloyds/CatastropheCodes/v1/health -> 200; /CatastropheCodes -> 401 "Client certificate is missing"'
+- name: PreProd
+  host: https://preprod-api.londonmarketgroup.co.uk
+  uri_pattern: https://preprod-api.londonmarketgroup.co.uk/{capability}/{facility}/{versionNo}/{Resource}
+  jwt_issuer: https://preprod-api.londonmarketgroup.co.uk/
+  oidc_discovery: https://preprod-api.londonmarketgroup.co.uk/discovery/.well-known/openid-configuration
+  live_probe: '2026-07-25 - /discovery/.well-known/openid-configuration -> 200'
+- name: Production
+  host: https://api.londonmarketgroup.co.uk
+  uri_pattern: https://api.londonmarketgroup.co.uk/{capability}/{facility}/{versionNo}/{Resource}
+  jwt_issuer: https://api.londonmarketgroup.co.uk/
+  oidc_discovery: https://api.londonmarketgroup.co.uk/discovery/.well-known/openid-configuration
+  live_probe: '2026-07-25 - /Lloyds/CatastropheCodes/v1/health -> 200'
+environment_isolation:
+  rule: >-
+    "Being guested into one of these environments does not provide any access to the other two."
+    Each environment requires a separate guesting of the account identity, a separate Azure AD
+    tenant id, and a DIFFERENT X.509 certificate registered in that environment's gateway.
+  jwt_rule: >-
+    The environment must be used throughout including inside the JWT - the "iss" claim must be set
+    to the environment's own gateway URI (e.g. https://sand-api.londonmarketgroup.co.uk/ in Sandbox).
+access_steps:
+- Onboard the organisation to LIMOSS Common Services / the LIMOSS API Gateway ("Subscribe to PPL API"
+  via the LIMOSS Self-Service Portal, or the LIMOSS Service Desk for new SSO users).
+- Guest the account identity into the target Common Services environment (Sand, PreProd, Prod).
+- Register the application in the Common Services Azure Active Directory (CS Developers On-Boarding
+  Guide v1.1, section "Registering an Application to use Single Sign On").
+- Register an X.509 certificate in that environment's API Gateway (same guide, section "On-Board to
+  the API Gateway").
+- Request test-harness configuration from the Lloyd's API Factory (developer@lloyds.com) - this is
+  where test broker and underwriter organisations are set up so consumers can exercise the
+  end-to-end journey independently.
+test_harness:
+  status: request-based
+  contact: developer@lloyds.com
+  scope: Sandbox and PreProd
+  purpose: >-
+    "Setting up test broker and underwriter organisations to enable consumers of the APIs to test
+    the end-to-end journey effectively and independently."
+  roadmap_note: >-
+    A hosted "Intelligent Test Harness and Test Client" and an Instrumentation & Diagnostics
+    service were on the portal's mid-term roadmap. Neither shipped publicly before the portal was
+    retired.
+health_check:
+  path: /health
+  authenticated: false
+  usable_anonymously: true
+  note: >-
+    The one part of the Lloyd's API estate a non-onboarded developer can actually call. Section
+    5.11 of the Base API Standard requires every endpoint to expose it without authentication.
+test_values:
+  published: false
+  note: >-
+    No test cards, test identifiers, magic values or seeded reference data are published. The only
+    concrete data values Lloyd's published are illustrative payload examples on the Technical Model
+    and Base API Standard pages - captured verbatim in examples/ - and real catastrophe codes
+    (17B, 17D, 17E) used as documentation samples, not as sandbox fixtures.
+related:
+- authentication/lloyds-of-london-authentication.yml
+- well-known/lloyds-of-london-well-known.yml
+- lifecycle/lloyds-of-london-lifecycle.yml

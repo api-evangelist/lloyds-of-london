@@ -1,0 +1,167 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  Lloyd's Base API Standard (archived), live probes of the London Market API Gateway, and Lloyd's
+  published market standards pages
+description: >-
+  Which cross-cutting and industry standards the Lloyd's market API surface actually conforms to.
+  Lloyd's is unusual in this catalogue: it is a standards PUBLISHER as well as an API publisher,
+  so the conformance record spans both its own normative Base API Standard and the insurance data
+  standards (ACORD, Core Data Record, MRC) it mandates on its market. Every entry is evidenced
+  either from the archived standard text or from a live probe on 2026-07-25.
+standards:
+- id: rest
+  conforms: true
+  evidence: >-
+    Base API Standard mandates a resource-model REST architecture with GET/POST/PUT/DELETE only;
+    SOAP must not be supported.
+- id: json
+  conforms: true
+  evidence: Structured resources are represented in JSON (and optionally XML); JSON Schema defines valid documents.
+- id: json-schema
+  conforms: true
+  evidence: >-
+    "JSON Schema will be created to specify the JSON representations. API Consumers must send
+    schema valid content to API Providers." Schema documents themselves were never published publicly.
+- id: openapi
+  conforms: partial
+  evidence: >-
+    "Endpoint designs must include a Swagger file (or files) that cover all HTTP operations and
+    parameters for all Resources defined in the design." A Swagger/OpenAPI 3.0 file was published
+    for the Placing API v1.10, but its download host is retired and the file was never archived,
+    so no spec is reachable today.
+- id: oauth2
+  conforms: true
+  evidence: >-
+    Authorization Bearer JWT from an Azure AD STS; on-behalf-of exchange uses
+    urn:ietf:params:oauth:grant-type:jwt-bearer (RFC 7523).
+- id: oidc
+  conforms: true
+  evidence: >-
+    Live OpenID Connect discovery documents at /discovery/.well-known/openid-configuration on the
+    Production, PreProd and Sandbox gateways (200, probed 2026-07-25), each referencing a JWKS.
+    Note the documents are minimal - issuer and jwks_uri only - so they support JWT signature
+    verification, not full OIDC client bootstrap.
+- id: rfc7517-jwks
+  conforms: true
+  evidence: /discovery/keys returns an RSA JWKS on all three gateway environments (200, probed 2026-07-25).
+- id: rfc7515-jws
+  conforms: true
+  evidence: >-
+    "The 'openid-configuration' and the 'jwks.json' file must follow the rfc7515 standard
+    sufficiently to support verification of the JWT signature."
+- id: mutual-tls
+  conforms: true
+  evidence: >-
+    Client X.509 certificate required on the TLS handshake; certificate must chain to a Microsoft
+    Trusted Root CA and should be Extended Validation. Live probe returns
+    401 "Client certificate is missing".
+- id: rfc9116-security-txt
+  conforms: true
+  evidence: https://www.lloyds.com/.well-known/security.txt returns 200 with Contact, Preferred-Languages and Canonical.
+  gap: No Expires field, which RFC 9116 section 2.5.5 requires.
+- id: rfc2119
+  conforms: true
+  evidence: The Base API Standard explicitly adopts RFC 2119 requirement keywords.
+- id: rfc1123-dates
+  conforms: true
+  evidence: The last-modified response header "must be a valid RFC 1123 date time value".
+- id: iso8601-dates
+  conforms: true
+  evidence: >-
+    _last_modified filter values must be valid ISO 8601 datetimes; payload examples use ISO 8601
+    (e.g. "createdDateTime": "2020-01-01T08:41:00+00:00").
+- id: http-conditional-requests
+  conforms: true
+  evidence: >-
+    Optimistic concurrency control via If-Unmodified-Since and If-Match; HTTP cache headers are
+    utilised and must be respected.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    A proprietary error document {"Message": ..., "Code": ...} is used instead of
+    application/problem+json.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Sunset or Deprecation header support is documented; no deprecation policy is published.
+- id: idempotency-key
+  conforms: false
+  evidence: The Base API Standard defines no idempotency-key mechanism.
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    Publish-subscribe and message-originated interfaces are explicitly out of scope of the Base
+    API Standard. Events are modelled as pollable resource collections with no notification
+    mechanism. The absence is by design, not an omission.
+- id: webhooks
+  conforms: false
+  evidence: No webhook surface is documented.
+- id: graphql
+  conforms: false
+  evidence: No GraphQL surface; the standard mandates resource-model REST.
+- id: grpc
+  conforms: false
+  evidence: No published .proto definitions.
+- id: soap
+  conforms: false
+  evidence: Explicitly out of scope - "SOAP must not be supported".
+- id: json-api
+  conforms: false
+  evidence: >-
+    A proprietary collection envelope {items, total, _links} is used, not the JSON:API media type.
+- id: hateoas-links
+  conforms: partial
+  evidence: >-
+    Every resource and collection carries a _links array with rel/href pairs (rel=canonical, plus
+    first/last/previous/next on paged collections), but there is no full hypermedia control model.
+- id: acord
+  conforms: aligned
+  evidence: >-
+    "The CDR aligns with ACORD technical standards, which are the agreed method for submitting and
+    exchanging data within the London market." Lloyd's funds free custom ACORD membership for all
+    coverholders, giving them ACORD Delegated Authority Data Standards. ACORD publicly announced
+    (June 2020) a mapping of its Data Messaging Standards and Digital Solutions to the Lloyd's API
+    Factory placement specifications. No ACORD certification of a Lloyd's-run API is claimed.
+  urls:
+  - https://www.lloyds.com/market-resources/requirements-and-standards/core-data-record
+  - https://www.lloyds.com/insights/news/lloyds-provides-acord-membership-for-all-coverholders
+  - https://www.acord.org/ACORD-about/acord-news/2020/06/11/acord-announces-mapping-of-lloyd-s-api-factory-standards-to-existing-data-standards-solutions
+- id: lloyds-core-data-record
+  conforms: publisher
+  evidence: >-
+    Lloyd's publishes the Core Data Record (v3.2) - the market's standard transactional data set
+    for premium validation and settlement, claims matching at first notification of loss, tax and
+    regulatory reporting - aligned to MRC v3.
+  url: https://www.lloyds.com/market-resources/requirements-and-standards/core-data-record
+- id: lloyds-market-reform-contract
+  conforms: publisher
+  evidence: MRC v3 is the contract standard the CDR is aligned to and that Placing documents carry.
+- id: lloyds-coverholder-reporting-standards
+  conforms: publisher
+  evidence: >-
+    Mandated core reporting data set for binding authority and coverholder agreements, with
+    premium, claims and ELTO reporting templates.
+  url: https://www.lloyds.com/market-resources/delegated-authorities/market-knowledge/reporting-standards
+- id: lloyds-base-api-standard
+  conforms: publisher
+  evidence: >-
+    Lloyd's own normative API standard - scope, principles, resource/information model, query
+    grammar, versioning compatibility rules, error and collection envelopes, and the dual
+    mTLS + JWT security model - binding on APIs published to the market by Lloyd's systems.
+  captured_as: conventions/lloyds-of-london-conventions.yml
+- id: soc2
+  conforms: unknown
+  evidence: No trust center or certification page is published for the Lloyd's API estate (probed 2026-07-25).
+- id: iso-27001
+  conforms: unknown
+  evidence: No published certification page found for the API estate.
+regulatory:
+  note: >-
+    Lloyd's is authorised under the Financial Services and Markets Act 2000 and regulated in the
+    UK by the PRA and FCA, and it publishes Crystal+ as the market's global regulatory, compliance
+    and tax database. That is corporate/market regulation rather than an API compliance programme,
+    and no API-scoped certification is claimed here.
+related:
+- conventions/lloyds-of-london-conventions.yml
+- authentication/lloyds-of-london-authentication.yml
+- well-known/lloyds-of-london-well-known.yml

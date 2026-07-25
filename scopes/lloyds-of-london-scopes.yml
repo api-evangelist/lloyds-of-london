@@ -1,0 +1,50 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+  (section 5.12.1 API Consumer Security Rules)
+docs: https://web.archive.org/web/20200930085423/https://developer.lloyds.com/Get-Started/Authentication-Information
+description: >-
+  Lloyd's market APIs do not publish a granular OAuth scope catalogue. The Base API Standard
+  mandates exactly one scope value on the consumer's bearer token - the Azure AD delegated
+  permission "user_impersonation" - and pushes all finer-grained authorisation onto JWT claims
+  evaluated by the API Provider rather than onto scopes. This is a deliberately coarse scope
+  surface: possession of a registered X.509 certificate plus a user_impersonation on-behalf-of
+  token is the access decision, and per-resource authorisation is done from sub/upn/lmg_* claims
+  inside the provider.
+identity_provider: Azure Active Directory (LIMOSS Common Services tenant, one per environment)
+schemes:
+- name: AzureADBearer
+  type: oauth2
+  source: Lloyd's Base API Standard section 5.12.1
+  flows:
+  - flow: authorizationCode
+    authority: https://login.microsoftonline.com/{tenantId}
+  - flow: on-behalf-of
+    grant_type: urn:ietf:params:oauth:grant-type:jwt-bearer
+scopes:
+- scope: user_impersonation
+  claim: scp
+  required: true
+  description: >-
+    The only scope value the Lloyd's Base API Standard names. "The JWT MUST contain a claim
+    called 'scp' and it must have the value of 'user_impersonation'." If the token returned from
+    the login does not already carry it, the application must obtain an on-behalf-of token from
+    Azure AD that does.
+  flows: [authorizationCode, on-behalf-of]
+  sources: ["Lloyd's Base API Standard section 5.12.1"]
+authorization_beyond_scopes:
+  mechanism: JWT claim evaluation by the API Provider
+  claims: [sub, upn, amr, aud, iss, appid, oid, lmg_mpo, lmg_cert_dn, lmg_pkt]
+  note: >-
+    "The API Provider may use any field in the JWT for authorisation purposes." Multi-factor
+    authentication is signalled by an "amr" claim containing "mfa".
+gaps:
+- No scopes/permissions reference page is published; the developer portal that carried the Base
+  API Standard now redirects to www.lloyds.com.
+- The published OIDC discovery documents at /discovery/.well-known/openid-configuration carry only
+  issuer and jwks_uri - no scopes_supported, authorization_endpoint or token_endpoint - so the
+  scope set cannot be enumerated from discovery.
+related:
+- authentication/lloyds-of-london-authentication.yml
+- well-known/lloyds-of-london-well-known.yml

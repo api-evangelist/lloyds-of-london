@@ -1,0 +1,194 @@
+generated: '2026-07-25'
+method: searched
+source: >-
+  https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+docs:
+- https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard
+- https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model
+description: >-
+  Lloyd's publishes a formal, normative Base API Standard - an RFC 2119 MUST/SHOULD document that
+  every API published to the market by a Lloyd's system has to obey. It is unusually complete for
+  a market body: it fixes the resource model, the collection envelope, the error envelope, the
+  paging/ordering/filtering/field-selection/expansion query grammar, optimistic concurrency,
+  versioning compatibility rules, mandatory meta resources, and the dual mTLS + JWT security
+  model. These conventions are captured here because the portal that hosted the standard has been
+  retired and the standard is the single most reusable technical artifact Lloyd's has published.
+standard:
+  name: Lloyd's Base API Standard
+  scope_in:
+  - Market Participant systems calling a Lloyd's System API
+  - Lloyd's Systems calling another Lloyd's System API
+  - Synchronous request-response interfaces
+  - REST interfaces
+  scope_out:
+  - Private interfaces within Lloyd's Systems
+  - SOAP interfaces
+  - Message-originated interfaces
+  - Publish-subscribe interfaces
+  - Thin-client user interfaces (AJAX)
+  normative_language: RFC 2119
+architecture:
+  style: resource-model REST (not operation-model); SOAP must not be supported
+  methods: [GET, POST, PUT, DELETE]
+  statelessness: >-
+    Neither side maintains conversation state; requests must not depend on state from previous
+    interactions.
+  gateway: >-
+    All consumer calls are mediated by the London Market API Gateway, which acts as the Policy
+    Enforcement Point and fronts per-capability backend providers.
+  uri_pattern: https://{env-}api.londonmarketgroup.co.uk/{capability}/{facility}/{versionNo}/{Resource}
+  action_modelling: >-
+    Changes to resource state and long-running operations are modelled as intent Resources -
+    creating a resource instance causes the action.
+authentication:
+  style: mutual TLS client certificate + Authorization Bearer JWT (on-behalf-of, scp=user_impersonation)
+  detail: authentication/lloyds-of-london-authentication.yml
+idempotency:
+  supported: false
+  key_header: null
+  note: >-
+    The Base API Standard contains no idempotency-key mechanism and the string "idempoten" does
+    not appear anywhere in it. Safety is instead sought through the resource model (POST creates
+    an intent Resource whose business key makes duplicates detectable) and through optimistic
+    concurrency on updates. Recorded as absent rather than inferred - no Idempotency pointer is
+    wired for this provider.
+concurrency:
+  optimistic: true
+  request_headers: [If-Match, If-Unmodified-Since]
+  response_headers: [last-modified]
+  last_modified_format: RFC 1123
+  note: >-
+    last-modified must be returned for single resources AND for collections, where its value is
+    the most recent modification across all resources matching the filter - not the time the
+    collection membership changed. Page size does not affect it.
+pagination:
+  style: page-number
+  params:
+  - {name: _pageSize, meaning: how many resources the request must return, max: 200}
+  - {name: _pageNum, meaning: page number, minimum: 1}
+  response_fields: [items, total, _links]
+  link_relations: [first, last, previous, next]
+  note: >-
+    Endpoint designs must state whether paging is supported per collection. Implementations may
+    return more than 200 resources only when _pageSize was not specified. The actual page size
+    must be echoed in the result envelope.
+ordering:
+  param: _order
+  syntax: comma-separated field names, leading '-' for descending, first field highest precedence
+  example: _order=-created,quoteID
+  pseudo_field: _last_modified
+  sortable_types: [number, string, date, time, datetime, URI, enumeration]
+  unsupported_behaviour: 501 with an error payload stating the ordering feature is unsupported
+field_selection:
+  param: _select
+  syntax: comma-separated top-level field names
+  example: _select=address,quoteID,provisions,created,sourceID
+  note: >-
+    Responses using _select must not be validated against the standard resource schema. The 'id'
+    pseudo field should always be returned regardless.
+expansion:
+  param: _expand
+  syntax: comma-separated field names holding links or resource identities
+  example: _expand=authority,agent,carrier
+  rules:
+  - Expansion must never happen by default - only when explicitly requested.
+  - Only supported between resources in the same endpoint design and the same resource scope.
+  - Only for links explicitly affirmed in the endpoint design.
+filtering:
+  style: field-name query parameters
+  rules:
+  - One query parameter per field only.
+  - A leading '!' immediately after '=' negates the criterion.
+  - Comma-separated values within a criterion.
+  examples:
+  - '?status=open'
+  - '?status=!closed,revoked'
+  - '?NameEmailOrg=contains(API)&BrokerDepartmentId=1'
+  unsupported_behaviour: 501, or 4XX where the criterion is invalid (InvalidFilterCriterion)
+  mandatory_filters: >-
+    Some collection GETs require mandatory filters; omitting them raises MandatoryFilterMissing.
+collection_envelope:
+  fields:
+  - {name: items, type: array, description: the resource representations}
+  - {name: total, type: integer, description: total resources accessible given the filter criteria}
+  - {name: _links, type: array, description: 'link objects {rel, href}; rel=canonical plus paging relations'}
+  example: examples/lloyds-of-london-catastrophecodes-collection.json
+identity:
+  pseudo_field: id
+  rule: >-
+    Resource identity should be a natural business key wherever one exists; otherwise a surrogate
+    (UUID or hash). Internal persistence primary keys must never be exposed. The identity is
+    normally embedded in the canonical URI and echoed as the lower-case 'id' pseudo field.
+  examples: ['B1234AB12345_2', 'B432198765_1_B_00001', '17E']
+links:
+  field: _links
+  shape: '[{rel: canonical, href: <absolute URI>}]'
+  note: Associations between resources are represented as URIs.
+metadata_resources:
+  required_per_endpoint: [version, health]
+  methods: [GET]
+  version:
+    authenticated: true
+    payload: '{"APIVersionNumber": "3.1", "ImplementationVersion": "1.0.0.0"}'
+    live_probe: 401 Client certificate is missing (api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1/version, 2026-07-25)
+  health:
+    authenticated: false
+    behaviour: self-check of configuration and downstream dependencies; 2XX healthy, 5XX unhealthy
+    note: Reduced capacity or raised failure rates alone must not produce a 5XX.
+    live_probe: 200 (api.londonmarketgroup.co.uk/Lloyds/CatastropheCodes/v1/health and the sand-api equivalent, 2026-07-25)
+content_negotiation:
+  representations: [application/json, application/xml]
+  schemas: [JSON Schema, XML Schema (Garden of Eden pattern), Schematron (optional)]
+  multipart: >-
+    Multi-part resources combine structured JSON with unstructured content via multipart MIME on
+    POST/PUT/GET. Document uploads must permit files up to 50MB and must be antivirus scanned
+    before the resource is created.
+  caching: HTTP cache headers are utilised and must be respected.
+versioning:
+  scheme: Major.Minor
+  major_in: uri-path
+  current_documented: 'Placing endpoint version 1.10 (developer tag v1.10.202004160916)'
+  compatibility:
+    minor: backward compatible with all ancestor minor versions of the same major
+    major: may break both backward and forward compatibility
+  detail: lifecycle/lloyds-of-london-lifecycle.yml
+error_envelope:
+  format: proprietary
+  rfc9457: false
+  media_type: application/json
+  shape: '{"Message": "<human readable>", "Code": <http status>}'
+  observed_gateway_shape: '{"Code": 401, "Message": "Client certificate is missing. Ref: <uuid>"}'
+  rules:
+  - An error document should be returned from any GET, PUT or POST resulting in 4XX or 5XX.
+  - Must be machine readable but carry a human-readable message.
+  - Must not expose internal implementation detail such as stack traces.
+  - May carry correlation or transaction identifiers that locate log entries in the provider.
+  - Should not echo the whole request payload.
+  - Providers must log every request that results in a 4XX.
+  detail: errors/lloyds-of-london-error-codes.yml
+tracing:
+  request_header: >-
+    The published Lloyd's sample client sets a correlation-id request header on every call
+    (Constants.Headers.CorrelationId, propagated from the inbound request or generated by
+    CorrelationIdMiddleware); the exact header string is not printed on the archived page.
+  observed_response_headers: [Trace-id, X-Clover-Status-Message]
+  error_reference: >-
+    Gateway error bodies embed a "Ref: <uuid>" correlation token in the Message field.
+rate_limiting:
+  documented: false
+  note: >-
+    The Base API Standard defines no throttling, quota or rate-limit signalling. No rate-limit
+    response headers were observed on the live gateway.
+events:
+  webhooks: false
+  publish_subscribe: false
+  note: >-
+    Publish-subscribe and message-originated interfaces are explicitly OUT of scope of the
+    standard. Events are modelled as resource collections polled by the consumer, with no
+    notification mechanism. An asynchronous callback pattern was flagged as a future addition.
+related:
+- authentication/lloyds-of-london-authentication.yml
+- errors/lloyds-of-london-error-codes.yml
+- lifecycle/lloyds-of-london-lifecycle.yml
+- data-model/lloyds-of-london-data-model.yml
+- examples/_index.yml
