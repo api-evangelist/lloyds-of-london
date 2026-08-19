@@ -46,7 +46,7 @@ tags:
 - ACORD
 created: '2026-07-25'
 modified: '2026-07-25'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: lloyds-of-london:lloyds-placing-api-submission-and-quote
   name: Lloyd's Placing API - Submission and Quote v1
