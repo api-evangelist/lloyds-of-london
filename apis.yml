@@ -40,6 +40,19 @@ tags:
 - Underwriting
 - Claims
 - Delegated Authority
+- Brokers
+- Market Infrastructure
+- Standards
+- ACORD
+tags_raw:
+- Insurance
+- United Kingdom
+- Reinsurance
+- Specialty Insurance
+- London Market
+- Underwriting
+- Claims
+- Delegated Authority
 - Broker
 - Market Infrastructure
 - Standards
@@ -64,6 +77,11 @@ apis:
   humanURL: https://developer.lloyds.com/placingsubmissionandquote-v1/Developer-Overview
   baseURL: https://api.londonmarketgroup.co.uk/PPL/Lloyds/Placing/V1
   tags:
+  - Placement
+  - Submission
+  - Quotes
+  - London Market
+  tags_raw:
   - Placement
   - Submission
   - Quote
