@@ -152,6 +152,11 @@ apis:
   humanURL: https://web.archive.org/web/20200610082013/https://developer.lloyds.com/Explore-Innovate
   tags:
   - Delegated Authority
+  - Risk Management
+  - Premium
+  - Claims
+  tags_raw:
+  - Delegated Authority
   - Risk
   - Premium
   - Claims
