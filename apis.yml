@@ -66,7 +66,7 @@ tags:
 - Underwriting
 - Claims
 - Delegated Authority
-- Brokers
+- Brokerage
 - Market Infrastructure
 - Standards
 - ACORD
@@ -83,6 +83,7 @@ tags_raw:
 - Market Infrastructure
 - Standards
 - ACORD
+- Brokers
 created: '2026-07-25'
 modified: '2026-07-25'
 specificationVersion: '0.23'
