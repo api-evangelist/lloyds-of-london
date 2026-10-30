@@ -1,4 +1,4 @@
-# Lloyd's of London (lloyds-of-london)
+# Lloyd's of London
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,81 +64,128 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Lloyd's of London is the world's specialist insurance and reinsurance market, operating as a regulated marketplace rather than as a carrier: the Corporation of Lloyd's oversees syndicates, managing agents, brokers and coverholders who underwrite property, casualty, marine, aviation, energy, cyber, political risk and reinsurance business on a subscription basis from its home market in the United Kingdom.
+Lloyd's of London is the world's specialist insurance and reinsurance market, operating as a regulated marketplace rather than as a carrier: the Corporation of Lloyd's oversees syndicates, managing agents, brokers and coverholders who underwrite property, casualty, marine, aviation, energy, cyber, political risk and reinsurance business on a subscription basis from its home market in the United Kingdom. Its API posture reflects that role. Lloyd's is a standards and market-infrastructure publisher first — the Core Data Record (CDR), the Market Reform Contract (MRC), coverholder and delegated claims reporting standards, and Blueprint Two digital processing requirements — and its technical surface is aimed at brokers, syndicates and market vendors, not at outside developers. Lloyd's ran a public API Development Portal at developer.lloyds.com (the "API Factory", BETA from June 2020) that published a Base API Standard and a catalogue of three market APIs: Placing — Submission and Quote, Placing — Firm Order, and RPAC for delegated authority risk, premium and claims. That portal now redirects to www.lloyds.com and no replacement self-serve developer portal is published. Production access to the underlying London Market API gateway (https://api.londonmarketgroup.co.uk) has always been partner-gated: an organisation must be onboarded to LIMOSS Common Services, registered in the Common Services Azure Active Directory tenant, and register an X.509 certificate before it can call anything. There is no public, self-serve Lloyd's API, no public sandbox and no public downloadable specification reachable today — the honest record for this market body is documentation-and-standards-first. What Lloyd's does still operate, verified by live probe, is a genuine gated API estate: three isolated gateway environments (Sandbox, PreProd, Production), an OpenID Connect discovery document and JWKS published on each, and a routed Catastrophe Codes v1 endpoint whose unauthenticated /health meta resource answers 200 while its data resources return 401 "Client certificate is missing". Its most reusable public artifact is the Lloyd's Base API Standard — a normative RFC 2119 document fixing the resource model, query grammar, collection and error envelopes, versioning compatibility rules and the dual mutual-TLS + JWT security model for every API published to the market.
 
-Its API posture reflects that role. Lloyd's is a standards and market-infrastructure publisher first — the Core Data Record (CDR), the Market Reform Contract (MRC), coverholder and delegated claims reporting standards, and Blueprint Two digital processing requirements — and its technical surface is aimed at brokers, syndicates and market vendors, not at outside developers. **There is no public, self-serve Lloyd's API today.**
+**Areas:** Insurance · United Kingdom · Reinsurance · Specialty Insurance · London Market · Underwriting · Claims · Delegated Authority · Brokerage · Market Infrastructure · Standards · ACORD
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/lloyds-of-london/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/lloyds-of-london/refs/heads/main/apis.yml)
+## Lloyd's of London on APIs.io
 
-## Tags
+Everything profiled for Lloyd's of London is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/lloyds-of-london/](https://apis.io/providers/lloyds-of-london/)** — or go straight to one of the APIs or properties below.
 
-- Insurance
-- United Kingdom
-- Reinsurance
-- Specialty Insurance
-- London Market
-- Underwriting
-- Claims
-- Delegated Authority
-- Broker
-- Market Infrastructure
-- Standards
-- ACORD
+### APIs (4)
 
-## Timestamps
+- [Lloyd's Placing API - Submission and Quote v1](https://apis.io/apis/lloyds-of-london/lloyds-placing-api-submission-and-quote/) — Market API for electronic placement in the London subscription market — create submissions and submission versions, upload Market Reform Contract and quote…
+- [Lloyd's Placing API - Firm Order](https://apis.io/apis/lloyds-of-london/lloyds-placing-api-firm-order/) — Second Placing API listed in the Lloyd's API catalogue, described by Lloyd's as "Finalise Placings, Bind Risks, Sign Transactions" — the BIND verb of the…
+- [Lloyd's RPAC API (Risk, Premium and Claims)](https://apis.io/apis/lloyds-of-london/lloyds-rpac-api/) — Third API listed in the Lloyd's API catalogue, described by Lloyd's as "Submit Risk, Premium and Claims details for Delegated Authority Placements" — the…
+- [Lloyd's Catastrophe Codes API v1](https://apis.io/apis/lloyds-of-london/lloyds-catastrophe-codes-api/) — Lloyd's catastrophe event reference data served from the London Market API Gateway — the market's canonical codes for aggregating losses to a named…
 
-- **Created:** 2026-07-25
-- **Modified:** 2026-07-25
+### Published properties
 
-## APIs
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-### Lloyd's Placing API - Submission and Quote v1
+#### Examples (22)
 
-Market API for electronic placement in the London subscription market — create submissions and submission versions, upload Market Reform Contract and quote documents, add carriers and underwriters to a submission, send requests for quote, and receive underwriter responses. Partner-gated to onboarded London Market organisations.
+Example requests and responses.
 
-- **Human URL:** [https://developer.lloyds.com/placingsubmissionandquote-v1/Developer-Overview](https://developer.lloyds.com/placingsubmissionandquote-v1/Developer-Overview) (portal retired — redirects to www.lloyds.com)
-- **Base URL:** `https://api.londonmarketgroup.co.uk/PPL/Lloyds/Placing/V1`
+- [Lloyds Of London Catastrophecodes Collection](https://apis.io/examples/lloyds-of-london/lloyds-of-london-catastrophecodes-collection/)
+- [Lloyds Of London Catastrophecodes Singleton](https://apis.io/examples/lloyds-of-london/lloyds-of-london-catastrophecodes-singleton/)
+- [Lloyds Of London Error Document](https://apis.io/examples/lloyds-of-london/lloyds-of-london-error-document/)
+- [Lloyds Of London Identity Document](https://apis.io/examples/lloyds-of-london/lloyds-of-london-identity-document/)
+- [Lloyds Of London Placing Brokerdepartment Collection](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-brokerdepartment-collection/)
+- [Lloyds Of London Placing Submission Collection](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submission-collection/)
+- [Lloyds Of London Placing Submission Get](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submission-get/)
+- [Lloyds Of London Placing Submission Post Request](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submission-post-request/)
+- [Lloyds Of London Placing Submission Post Response](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submission-post-response/)
+- [Lloyds Of London Placing Submission Put Request](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submission-put-request/)
+- [Lloyds Of London Placing Submission Put Response](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submission-put-response/)
+- [Lloyds Of London Placing Submissiondialogue Quote Request](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submissiondialogue-quote-request/)
+- [Lloyds Of London Placing Submissiondialogue Quote Response](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submissiondialogue-quote-response/)
+- [Lloyds Of London Placing Submissiondialogue Rfq Request](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submissiondialogue-rfq-request/)
+- [Lloyds Of London Placing Submissiondialogue Rfq Response](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submissiondialogue-rfq-response/)
+- [Lloyds Of London Placing Submissiondocument Collection](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submissiondocument-collection/)
+- [Lloyds Of London Placing Submissiondocument Post Request](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submissiondocument-post-request/)
+- [Lloyds Of London Placing Submissiondocument Post Response](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submissiondocument-post-response/)
+- [Lloyds Of London Placing Submissionunderwriter Post Request](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submissionunderwriter-post-request/)
+- [Lloyds Of London Placing Submissionunderwriter Post Response](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-submissionunderwriter-post-response/)
+- [Lloyds Of London Placing Underwriterorganisation Collection](https://apis.io/examples/lloyds-of-london/lloyds-of-london-placing-underwriterorganisation-collection/)
+- [Lloyds Of London Version Document](https://apis.io/examples/lloyds-of-london/lloyds-of-london-version-document/)
 
-#### Properties
+#### Security (3)
 
-- [Documentation (archived Key Details)](https://web.archive.org/web/20210128061829/https://developer.lloyds.com/placingsubmissionandquote-v1/Key-Details-On-API)
-- [API Reference (archived Technical Model)](https://web.archive.org/web/20210128055606/https://developer.lloyds.com/placingsubmissionandquote-v1/Technical-Model)
-- [Base API Standard (archived)](https://web.archive.org/web/20200930095802/https://developer.lloyds.com/Get-Started/Base-API-Standard)
-- [Authentication (archived)](https://web.archive.org/web/20200930085423/https://developer.lloyds.com/Get-Started/Authentication-Information)
+Authentication, trust centre, and vulnerability disclosure.
 
-### Lloyd's Placing API - Firm Order
+- [Lloyds Of London Authentication](https://apis.io/security/lloyds-of-london/lloyds-of-london-authentication/)
+- [Lloyds Of London Domain Security](https://apis.io/security/lloyds-of-london/lloyds-of-london-domain-security/)
+- [Lloyds Of London Vulnerability Disclosure](https://apis.io/security/lloyds-of-london/lloyds-of-london-vulnerability-disclosure/)
 
-"Finalise Placings, Bind Risks, Sign Transactions" — the bind verb for the London subscription market. Catalogue entry only; no public reference documentation or specification.
+#### OAuth scopes (1)
 
-- **Human URL:** [Archived API catalogue](https://web.archive.org/web/20200610082013/https://developer.lloyds.com/Explore-Innovate)
+The permissions the API asks for.
 
-### Lloyd's RPAC API (Risk, Premium and Claims)
+- [Lloyds Of London Scopes](https://apis.io/scopes/lloyds-of-london/lloyds-of-london-scopes/)
 
-"Submit Risk, Premium and Claims details for Delegated Authority Placements" — the delegated authority reporting path from coverholders and delegated claims administrators, aligned to Lloyd's Coverholder Reporting Standards and ACORD technical standards. Catalogue entry only; no public reference documentation or specification.
+## Where to find this API
 
-- **Human URL:** [Archived API catalogue](https://web.archive.org/web/20200610082013/https://developer.lloyds.com/Explore-Innovate)
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-## API Posture
+- [Website](https://www.lloyds.com/)
+- [Documentation](https://www.lloyds.com/market-resources/requirements-and-standards)
+- [Support](https://www.lloyds.com/contact-us)
+- [Blog](https://www.lloyds.com/news-and-insights)
+- [Security](https://www.lloyds.com/security-reports)
+- [Terms of service](https://www.lloyds.com/help/terms-and-conditions)
+- [Privacy policy](https://www.lloyds.com/help/privacy)
+- [GitHub](https://github.com/lloydsdigital)
 
-- **Developer portal:** [developer.lloyds.com](https://developer.lloyds.com/) — a genuine Lloyd's API Development Portal ("API Factory", BETA from 8 June 2020) that published a Base API Standard, authentication guidance and a three-API catalogue. It is retired: HTTPS does not complete a connection, HTTP 301s to www.lloyds.com, and Internet Archive captures show the redirect from April 2024 onward. No replacement portal is published.
-- **OpenAPI:** one Swagger/OpenAPI 3.0 file was documented for the Placing API v1.10 but is unreachable and unarchived. **No specifications harvested — no `openapi/` directory in this repo.**
-- **Auth:** OAuth 2.0 / OpenID Connect via Azure Active Directory (JWT, on-behalf-of flow, service accounts, `user_impersonation` scope) plus a registered X.509 certificate per LIMOSS environment. Never self-serve.
-- **Onboarding:** LIMOSS Common Services onboarding, per-environment guesting (Sandbox / PreProd / Production), Azure AD application registration.
-- **ACORD:** ACORD-aligned market standards body — the CDR and Coverholder Reporting Standards align to ACORD technical standards, Lloyd's funds free ACORD membership for all coverholders, and ACORD mapped its standards to the Lloyd's API Factory placement specifications in June 2020.
-- **Webhooks / AsyncAPI:** none. The Base API Standard explicitly places message-originated and publish-subscribe interfaces out of scope.
-- **Postman / GraphQL / gRPC:** none published.
+## API Evangelist rating
 
-## Standards and Market Resources
+**Kin Score 32.2** — thin · rubric 0.24.0 · scored 2026-10-17
 
-- [Requirements and Standards](https://www.lloyds.com/market-resources/requirements-and-standards)
-- [Core Data Record](https://www.lloyds.com/market-resources/requirements-and-standards/core-data-record)
-- [Coverholder and Delegated Claims Reporting Standards](https://www.lloyds.com/market-resources/delegated-authorities/market-knowledge/reporting-standards)
-- [ACORD membership for coverholders](https://www.lloyds.com/insights/news/lloyds-provides-acord-membership-for-all-coverholders)
-- [Lloyd's Insights Hub](https://insights.lloyds.com/) — registration-gated; hosts a CDR glossary data feed described as available via an API
-- [Crystal+](https://crystalplus.lloyds.com/home) — international regulatory and tax requirements database (login)
-- [Delegated Data Manager (DDM)](https://www.lloyds.com/market-resources/tools/delegated-data-manager/faqs) — market bordereaux service via LIMOSS
+| Facet | Score |
+|---|---|
+| Discoverability | 80.4 |
+| Contract quality | 6.5 |
+| Contract governance | 18.2 |
+| Operational transparency | 28.9 |
+| Developer ergonomics | 42.9 |
+| Access clarity | 21.1 |
 
-## Links
+**Agent readiness 6.7** — agent-aware
 
-- **Website:** [https://www.lloyds.com/](https://www.lloyds.com/)
-- **GitHub:** [lloydsdigital](https://github.com/lloydsdigital) (0 public repos) · [LloydsOfLondon](https://github.com/LloydsOfLondon) (0 public repos)
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 42.1** — Insurance
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/lloyds-of-london/](https://apis.io/providers/lloyds-of-london/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Lloyd's of London: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/lloyds-of-london/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
